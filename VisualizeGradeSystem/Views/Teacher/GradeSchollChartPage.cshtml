@@ -1,0 +1,405 @@
+﻿@{
+    ViewBag.Title = "校级曲线";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("HomePartialView")
+
+<!--<script src="~/Resources/js/common/jquery-1.9.1.js"></script>-->
+
+<div class="container" style="margin: 100px">
+    <div class="row clearfix">
+        <div class="col-md-4 column">
+            <div class="col-md-4 column">
+                <h3>选择</h3>
+                <form action="#" method="post" enctype="multipart/form-data" name="choose">
+                    <p id="error" style="color: red; text-align: center">&nbsp;</p>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">选择考试科目</label>
+                        <select id="subject" name="subject">
+                            <option value="Access">Access</option>
+                            <option value="C">C语言</option>
+                            <option value="所有">所有</option>
+                        </select>
+                        <label for="exampleInputEmail1">选择院系</label>
+                        <select id="depart" name="depart" onchange="select_change(this.selectedIndex)">
+                        </select>
+                        <label for="exampleInputEmail1">选择班级</label>
+                        <select id="class" name="class">
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-4 column">
+            <div id="chart" style="height: 400px; width: 600px"></div>
+        </div>
+        <div class="col-md-4 column">
+        </div>
+    </div>
+</div>
+
+
+
+<!--<script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>-->
+<script src="~/Resources/js/utility/echarts.common.min.js"></script>
+<script>
+
+    var arr_depart = ["所有", "生态学院", "农牧学院草科系", "农牧学院农林系", "农牧学院动医系", "农牧学院动科系", "财经学院会财系", "财经学院工管系", "财经学院旅管系", "财经学院管科系", "财经学院财金系"];
+    var arr_class = [
+            ["所有"],
+            ["所有", "生技20151", "生技20152", "生技20153", "生物工程15", "环境生态15", "环科2015"],
+            ["所有", "草科2015"],
+            ["所有", "林学2015", "农学2015", "园艺2015"],
+            ["所有", "动医20151", "动医20152"],
+            ["所有", "动科2015"],
+            ["所有", "财务20151", "财务20152", "会计20151", "会计20152"],
+            ["所有", "工商20151", "工商20152"],
+            ["所有", "旅管2015", "行政2015"],
+            ["所有", "信管2015"],
+            ["所有", "金融20151", "金融20152"]
+    ];
+    var arr_subject = ["Access", "C"];
+    function init() {
+        var depart = document.choose.depart;
+        depart.style.width = 150 + "px";
+        var Class = document.choose.class;
+        Class.style.width = 150 + "px";
+        //给下拉框赋值高度，才能在其里面写入内容
+        depart.length = arr_depart.length;
+        for (var i = 0; i < arr_depart.length; i++) {
+            depart.options[i].text = arr_depart[i];
+            depart.options[i].value = arr_depart[i];
+        }
+        //设置默认被选中的选项
+        var index = 1;
+        depart.selectedIndex = index;
+        //给city赋值高度，才能在其里面写入内容
+        Class.length = arr_class[index].length;
+        for (var j = 0; j < arr_class[index].length; j++) {
+            Class.options[j].text = arr_class[index][j];
+            Class.options[j].value = arr_class[index][j];
+        }
+
+    }
+    function select_change(num) {
+        var Class = document.choose.class;
+        Class.length = 0;
+        Class.length = arr_class[num].length;
+        for (var i = 0; i < arr_class[num].length; i++) {
+            Class.options[i].text = arr_class[num][i];
+            Class.options[i].value = arr_class[num][i];
+        }
+    }
+    // 基于准备好的dom，初始化echarts图表
+    var subject = "Access";
+    var depart = "生态学院";
+    var Class = "环境生态15";
+    var myChart = echarts.init(document.getElementById("chart"));
+    var y = [];
+    var x = [];
+    var i = 0;
+    var j = 0;
+    var k = 0;
+    var size = 0;
+    $(document).ready(function () {
+        init();
+        $("#subject").change(function () {
+            subject = $("#subject").find("option:selected").text();
+            clean();
+            myChart = echarts.init(document.getElementById("chart"));
+            update();
+            myChart.setOption(option, true);
+        });
+        $("#depart").change(function () {
+            depart = $("#depart").find("option:selected").text();
+            Class = "所有";
+            clean();
+            myChart = echarts.init(document.getElementById("chart"));
+            update();
+            myChart.setOption(option, true);
+        });
+        $("#class").change(function () {
+            Class = $("#class").find("option:selected").text();
+            clean();
+            alert("before:" + option.series.length);
+            myChart = echarts.init(document.getElementById("chart"));
+            update();
+            alert("after:" + option.series.length);
+            myChart.setOption(option, true);
+        });
+    });
+    function clean() {
+        this.option.series = [];
+    }
+    function update() {
+        x = [];
+        y = [];
+        if (subject == "所有" && depart != "所有" && Class != "所有") {
+            for (i = 0; i < arr_subject.length; i++) {
+                y = GetY(arr_subject[i], depart, Class);
+                x = GetX(arr_subject[i], depart, Class);
+                if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                {
+                    x = ['无考试成绩'];
+                    y = [0];
+                }
+                this.option.series.push(
+                    {
+                        name: arr_subject[i] + "-" + depart + "-" + Class,
+                        type: 'bar',
+                        data: y
+                    }
+                );
+                //option.legend.data.push(arr_subject[i] +"-" + Class);
+                this.option.xAxis[0].data = x;
+            }
+        }
+        else if (subject !== "所有" && depart != "所有" && Class != "所有") {
+            y = GetY(subject, depart, Class);
+            x = GetX(subject, depart, Class);
+            if (typeof (y[0]) == "undefined")//证明没有找到成绩
+            {
+                x = ['无考试成绩'];
+                y = [0];
+            }
+            this.option.series[0] =
+                {
+                    name: subject + "-" + depart + "-" + Class,
+                    type: 'bar',
+                    data: y
+                };
+            option.xAxis[0].data = x;
+        }
+        else if (subject != "所有" && depart == "所有" && Class != "所有") {
+            for (i = 1; i < arr_depart.length; i++) {
+                y = GetY(subject, arr_depart[i], Class);
+                x = GetX(subject, arr_depart[i], Class);
+                if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                {
+                    x = ['无考试成绩'];
+                    y = [0];
+                }
+                this.option.series.push(
+                    {
+                        name: subject + "-" + arr_depart[i] + "-" + Class,
+                        type: 'bar',
+                        data: y
+                    });
+                //option.legend.data.push(subject + "-" + Class);
+                this.option.xAxis[0].data = x;
+            }
+        }
+        else if (subject != "所有" && depart != "所有" && Class == "所有") {
+            for (i = 1; i < arr_class[arr_depart.indexOf(depart)].length; i++) {
+                y = GetY(subject, depart, arr_class[arr_depart.indexOf(depart)][i]);
+                x = GetX(subject, depart, arr_class[arr_depart.indexOf(depart)][i]);
+                if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                {
+                    x = ['无考试成绩'];
+                    y = [0];
+                }
+                this.option.series.push(
+                    {
+                        name: subject + "-" + depart + "-" + arr_class[arr_depart.indexOf(depart)][i],
+                        type: 'bar',
+                        data: y
+                    });
+                //option.legend.data.push(subject + "-" + arr_class[arr_depart.indexOf(depart)][i]);
+                this.option.xAxis[0].data = x;
+            }
+        }
+        else if (subject == "所有" && depart == "所有" && Class != "所有") {
+            for (i = 0; i < arr_subject.length; i++) {
+                for (j = 1; j < arr_depart.length; j++) {
+                    y = GetY(arr_subject[i], arr_depart[j], Class);
+                    x = GetX(arr_subject[i], arr_depart[i], Class);
+                    if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                    {
+                        x = ['无考试成绩'];
+                        y = [0];
+                    }
+                    this.option.series.push(
+                        {
+                            name: arr_subject[i] + "-" + arr_depart[j] + "-" + Class,
+                            type: 'bar',
+                            data: y
+                        });
+                    //option.legend.data.push(arr_subject[i] + "-" + Class);
+                    this.option.xAxis[0].data = x;
+                }
+            }
+        }
+        else if (subject == "所有" && depart != "所有" && Class == "所有") {
+            size = 0;
+            for (i = 0; i < arr_subject.length; i++) {
+                for (j = 1; j < arr_class[arr_depart.indexOf(depart)].length; j++) {
+                    y = GetY(arr_subject[i], depart, arr_class[arr_depart.indexOf(depart)][j]);
+                    x = GetX(arr_subject[i], depart, arr_class[arr_depart.indexOf(depart)][j]);
+                    if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                    {
+                        x = ['无考试成绩'];
+                        y = [0];
+                    }
+                    this.option.series.push(
+                        {
+                            name: arr_subject[i] + "-" + depart + "-" + arr_class[arr_depart.indexOf(depart)][j],
+                            type: 'bar',
+                            data: y
+                        });
+                    //option.legend.data.push(arr_subject[i] + "-" + arr_class[arr_depart.indexOf(depart)][j]);
+                    this.option.xAxis[0].data = x;
+                }
+            }
+        }
+        else if (subject != "所有" && depart == "所有" && Class == "所有") {
+            size = 0;
+            for (i = 1; i < arr_depart.length; i++) {
+                for (j = 1; j < arr_class[i].length; j++) {
+                    y = GetY(subject, arr_depart[i], arr_class[i][j]);
+                    x = GetX(subject, arr_depart[i], arr_class[i][j]);
+                    if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                    {
+                        x = ['无考试成绩'];
+                        y = [0];
+                    }
+                    this.option.series.push(
+                        {
+                            name: subject + "-" + arr_depart[i] + "-" + arr_class[i][j],
+                            type: 'bar',
+                            data: y
+                        });
+                    //option.legend.data.push(subject + "-" + arr_class[i][j]);
+                    this.option.xAxis[0].data = x;
+                }
+            }
+        }
+        else {
+            size = 0;
+            for (i = 0; i < arr_subject.length; i++) {
+                for (j = 1; j < arr_depart.length; j++) {
+                    for (k = 1; k < arr_class[j].length; k++) {
+                        y = GetY(arr_subject[i], arr_depart[j], arr_class[j][k]);
+                        x = GetX(arr_subject[i], arr_depart[j], arr_class[j][k]);
+                        if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                        {
+                            x = ['无考试成绩'];
+                            y = [0];
+                        }
+                        this.option.series.push(
+                            {
+                                name: arr_subject[i] + "-" + arr_depart[j] + "-" + arr_class[j][k],
+                                type: 'bar',
+                                data: y
+                            });
+                        option.xAxis[0].data = x;
+                    }
+                }
+            }
+        }
+    }
+    function GetY(s, d, c) {
+        $.ajax({
+            type: "post",
+            async: false,
+            url: "@Url.Content("~/Teacher/GradeSchollChartPage/")",
+            data: { "subject": s, "depart": d, "class": c },
+            dataType: "json",
+            success: function (result) {
+                y = [];
+                if (result) {
+                    for (var i = 0; i < result.length; i++) {
+                        y.push(result[i]);
+                    }
+                }
+            }
+        })
+
+        return y;
+    }
+    function GetX(s, d, c) {
+        $.ajax({
+            type: "post",
+            async: false,
+            url: "@Url.Content("~/Teacher/GradeSchollChartPaget_X/")",
+            data: { "subject": s, "depart": d, "class": c },
+            dataType: "json",
+            success: function (result) {
+                x = [];
+                if (result) {
+                    for (var i = 0; i < result.length; i++) {
+                        x.push(result[i]);
+                    }
+                }
+            }
+        })
+
+        return x;
+    }
+
+    x = GetX("Access", "生态学院", "环境生态15");
+    y = GetY("Access", "生态学院", "环境生态15");
+
+    var option = {
+        title: {
+            text: '成绩曲线',
+            subtext: '仅限教师端查看'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['成绩曲线']
+        },
+        //右上角工具条
+        toolbox: {
+            show: true,
+            feature: {
+                mark: { show: true },
+                dataView: { show: true, readOnly: false },
+                magicType: { show: true, type: ['line', 'bar'] },
+                restore: { show: true },
+                saveAsImage: { show: true }
+            }
+        },
+        calculable: true,
+        xAxis: [
+            {
+                type: 'category',
+                boundaryGap: false,
+                data: ["无考试"]
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} '
+                }
+            }
+        ],
+        series: [
+            {
+                name: '成绩曲线',
+                type: 'line',
+                data: [0],
+                markPoint: {
+                    data: [
+                        { type: 'max', name: '最大值' },
+                        { type: 'min', name: '最小值' }
+                    ]
+                },
+                markLine: {
+                    data: [
+                        { type: 'average', name: '平均值' }
+                    ]
+                }
+            }
+        ]
+    };
+
+    // 为echarts对象加载数据
+    myChart.setOption(option);
+    alert(option.series.length);
+
+</script>

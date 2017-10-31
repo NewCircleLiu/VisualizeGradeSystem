@@ -22,6 +22,7 @@ namespace VisualizeGradeSystem.Utils.filters
         //处理未能授权的情况
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
+            
             filterContext.Result = new RedirectResult("~/Login/Index/");
         }
     }

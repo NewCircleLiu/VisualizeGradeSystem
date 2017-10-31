@@ -1,0 +1,31 @@
+    a:hover, a:visited, a:focus {
+        text-decoration: none;
+    }
+
+    body {
+        background: #fff;
+        padding-top: 0px;
+    }
+
+    .navbar {
+        min-height: 50px;
+        margin-bottom: 0px;
+    }
+
+    #top_bar {
+        margin-top: 50px;
+    }
+
+    .navbar-header {
+        float: left;
+        width: auto;
+    }
+
+    .navbar-default .navbar-toggle {
+        border-color: #0066FF;
+        background-color: #0066FF;
+    }
+
+    .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+        background-color: #0066FF;
+   }

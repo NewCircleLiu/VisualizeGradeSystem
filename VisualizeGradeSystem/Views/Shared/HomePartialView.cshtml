@@ -1,79 +1,50 @@
-﻿<style>
-    a:hover {
-        text-decoration: none;
-    }
-    body{
-        background: #fff;
-        padding-top:0px;
-    }
-    .navbar {
-        min-height:50px;
-        margin-bottom: 0px;
-    }
-    #top_bar {
-        margin-top:50px;
-    }
-    .navbar-header {
-    float: left;
-    width:auto;
-    }
-    .navbar-default .navbar-toggle {
-        border-color:#0066FF;
-        background-color:#0066FF;
-
-    }
-        .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
-            background-color:#0066FF;
-        }
-</style>
-
-<link href="~/Resources/css/login-register.css" rel="stylesheet" />
-
+﻿<link href="~/Resources/css/login-register.css" rel="stylesheet" />
+<link href="~/Resources/css/HomePartialView.css" rel="stylesheet" />
 <script src="~/Resources/js/common/JQuery.md5.js"></script>
-
-<nav class="navbar navbar-default" role="navigation" id="top_bar" style="background-color:#0066FF">
+<script src="~/Resources/js/custom/userLogin.js"></script>
+<nav class="navbar navbar-default" role="navigation" id="top_bar" style="background-color: #0066FF">
     <div class="container">
-        <div class="navbar-header" style="float:left;">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <div class="navbar-header" style="float: left;">
+            <button type="button"  onclick="OnClick();" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-	        <a href="@Url.Content("~/Student/Index/")"><img src="~/Resources/img/logo_white.png" id="top_img"></a> <!--到时候替换我们自己的-->
+            <a href="@Url.Content("~/Student/Index/")">
+                <img src="~/Resources/img/logo.png" id="top_img">
+            </a>
         </div>
-        <!--/.navbar-header-->
         <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-2" style="height: 1px; padding-bottom: 10px">
-             <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav">
                 @if (ViewBag.account != null)
                 {
-				<li class="dropdown">
-               
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">欢迎，@ViewBag.account<strong class="caret"></strong></a>
 
-					<ul class="dropdown-menu">
-						<li>
-								<a href="#">个人资料</a>
-						</li>
-						<li>
-								<a href="#">修改密码</a>
-						</li>
-						<li class="divider">
-						</li>
-						<li>
-								<a href="~/Student/Logout/">退出</a>
-						</li>
-					</ul>
-				</li>
+                    <li class="dropdown">
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">欢迎，@ViewBag.account<strong class="caret"></strong></a>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="#">个人资料</a>
+                            </li>
+                            <li>
+                                <a href="#">修改密码</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="~/Student/Logout/">退出</a>
+                            </li>
+                        </ul>
+                    </li>
                 }
                 else
                 {
-                    
                     <li>
-                        <a class="btn big-login" data-toggle="modal" href="javascript:void(0)" onclick="openLoginModal();">登录</a>
+                        <a class="btn big-login" style="background-color: #447BD4; padding-top: 5px; padding-bottom: 5px" data-toggle="modal" href="javascript:void(0)" onclick="openLoginModal();">登录</a>
                     </li>
                 }
-			</ul>
+            </ul>
             <ul class="nav navbar-nav">
                 <li>
                     <a href="@Url.Content("~/Student/Index")">首页</a>
@@ -91,132 +62,46 @@
                     <a href="@Url.Content("~/Manual/")">使用指南</a>
                 </li>
             </ul>
-
         </div>
         <div class="clearfix"></div>
     </div>
 </nav>
 <div class="modal fade login" id="loginModal">
-	<div class="modal-dialog login animated">
-    	<div class="modal-content">
-    		<div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">登录</h4>
-        </div>
-        <div class="modal-body">  
-            <div class="box">
-                    <div class="content">
-                    
-                    <div class="form loginBox">
-                        <p id="error_info" style="color:red;text-align:center">&nbsp;</p>
-                        <form method="post" action="~/Login/CheckUser/" accept-charset="UTF-8">
-                        <input id="user_id" class="form-control" type="text" placeholder="账号" name="user_id">
-                        <input id="user_pass" class="form-control" type="password" placeholder="密码" name="user_pass">
-                        <div class="form-group">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <input class="form-control" placeholder="验证码" name="ValidateCode" id="ValidateCode" type="text"  style="width: 200px;">
-                                    </td>
-                                    <td>
-                                        <a onclick="refreshCode()">                 
-                                        <img id="codeImg" src="@Url.Content("~/VerifyCode")" style="border:solid 1px;width:110px;height:33px;margin-left:20px;"/>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <input class="btn btn-default btn-login" type="button" value="Login" onclick="login()">
-                        </form>
-                    </div>
-                    </div>
+    <div class="modal-dialog login animated">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">登录</h4>
             </div>
-        </div>     
-    	</div>
-	</div>
+            <div class="modal-body">
+                <div class="box">
+                    <div class="content">
+                        <div class="form loginBox">
+                            <p id="error_info" style="color: red; text-align: center">&nbsp;</p>
+                            <form method="post" action="~/Login/CheckUser/" accept-charset="UTF-8">
+                                <input id="user_id" class="form-control" type="text" placeholder="账号" name="user_id">
+                                <input id="user_pass" class="form-control" type="password" placeholder="密码" name="user_pass">
+                                <div class="form-group">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <input class="form-control" placeholder="验证码" name="ValidateCode" id="ValidateCode" type="text" style="width: 200px;">
+                                            </td>
+                                            <td>
+                                                <a onclick="refreshCode()">
+                                                    <img id="codeImg" src="@Url.Content("~/VerifyCode")" style="border:solid 1px;width:110px;height:33px;margin-left:20px;"/>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <input class="btn btn-default btn-login" type="button" value="登录" onclick="login()">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-
-<script>
-    function showLoginForm() {
-        $('#loginModal .registerBox').fadeOut('fast', function () {
-            $('.loginBox').fadeIn('fast');
-            $('.register-footer').fadeOut('fast', function () {
-                $('.login-footer').fadeIn('fast');
-            });
-
-            $('.modal-title').html('Login with');
-        });
-        $("#error_info").text("");
-    }
-    function openLoginModal() {
-        showLoginForm();
-        setTimeout(function () {
-            $('#loginModal').modal('show');
-        }, 230);
-
-    }
-
-
-
-    /*
-        刷新验证码
-    */
-    function refreshCode() {
-        var codeImg = jQuery("#codeImg");
-        var time = new Date().getSeconds();
-        var url = "/VerifyCode?time=" + time;
-        codeImg.attr("src", url);
-    }
-
-
-    /*
-     登录
-
-
-    */
-
-
-    function login() {
-        //alert("abc");
-        var password = jQuery("#user_pass").val();
-        strmd5 = $.md5(password).toLocaleUpperCase();
-        if (jQuery("#user_id").val().length <= 0) {
-            jQuery("#error_info").text("请输入账号");
-            return;
-        }
-        if (jQuery("#user_pass").val().length <= 0) {
-            jQuery("#error_info").text("请输入密码");
-            return;
-        }
-        if (jQuery("#ValidateCode").val().length <= 0) {
-            jQuery("#error_info").text("请输入验证码");
-            return;
-        }
-
-        jQuery.post(
-            "@Url.Content("~/Login/CheckUser/")",
-                {
-                    "account": jQuery("#user_id").val(),
-                    "password": strmd5,
-                    "verifycode": jQuery("#ValidateCode").val()
-                },
-                function (data) {
-                    if (data == "error") {
-                        jQuery("#error_info").text("账号或密码错误");
-                        refreshCode();
-                    }
-                    else if (data == "ErrorCode")
-                    {
-                        jQuery("#error_info").text("验证码错误");
-                        refreshCode();
-                    }
-                    else if (data == "stu") {
-                        location.href = "@Url.Content("~/Student/Index/")";
-                    } else {
-                        location.href = "@Url.Content("~/Teacher/Index/")";
-                    }
-                }
-            );
-            }
-</script>

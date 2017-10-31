@@ -1,0 +1,7 @@
+    .btn-default, .widget-content input[type="button"] {
+    padding-bottom: 3px;
+    border-bottom: 2px solid #2185C5;
+    background: #2185C5;
+    color: #ffffff;
+    border-color: #2185C5;
+}

@@ -40,22 +40,82 @@ namespace VisualizeGradeSystem.Controllers
             ViewBag.account = u.user_account;
             return View();
         }
+        [UserAuthorize]
+        public ActionResult GradeSchollChartPage()
+        {
+            User u = (User)Session["User"];
+            ViewBag.account = u.user_account;
+            return View();
+        }
+        [HttpPost]
+        public JsonResult GradeSchollChartPage(string subject, string depart, string Class)
+        {
+            Score[] list = sc.ScoreList.Where(s => s.subject == subject && s.stu_depart == depart && s.stu_class == Class).ToArray();
+            List<string> time = new List<string>();
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (!time.Contains(list[i].uploadtime))
+                {
+                    time.Add(list[i].uploadtime); //有多少次考试
+                }
+
+            }
+            List<double> scoreList = new List<double>();
+            foreach (string t in time)
+            {
+                double temp = 0.0;
+                int l = 0;
+                for (int i = 0; i < list.Length; i++)
+                {
+                    if (list[i].uploadtime.Equals(t))
+                    {
+                        temp += list[i].score;
+                        l++;
+                    }
+                }
+                temp = temp / l;
+                scoreList.Add(Math.Round(temp, 2));
+            }
+            return Json(scoreList);
+        }
+        [HttpPost]
+        public JsonResult GradeSchollChartPaget_X(string subject, string depart, string Class)
+        {
+            Score[] list = sc.ScoreList.Where(s => s.subject == subject && s.stu_depart == depart && s.stu_class == Class).ToArray();
+            List<string> time = new List<string>();
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (!time.Contains(list[i].uploadtime))
+                {
+                    time.Add(list[i].uploadtime); //有多少次考试
+                }
+
+            }
+            List<string> x = new List<string>();
+            int j = 1;
+            foreach (string t in time)
+            {
+                x.Add("第" + j + "次考试");
+                j++;
+            }
+            return Json(x);
+        }
         [HttpPost]
         public ActionResult ChooseSubject(string subject)
         {
-            string today=DateTime.Now.ToString("yyyy-MM-dd");
+            string today = DateTime.Now.ToString("yyyy-MM-dd");
             Score[] array = sc.ScoreList.Where(s => s.uploadtime.Contains(today)).ToArray();
             for (int i = 0; i < array.Length; i++)
             {
                 Score s = array[i];
-                s.subject=subject;
+                s.subject = subject;
                 sc.ScoreList.Attach(s);
                 sc.Entry(s).State = System.Data.EntityState.Modified;
                 sc.SaveChanges();
                 //sc. = subject;
                 //sc.SaveChanges();
             }
-            return View();
+            return RedirectToAction("UploadFiles", "Teacher");
         }
         [HttpPost]
         public ActionResult UploadFiles()

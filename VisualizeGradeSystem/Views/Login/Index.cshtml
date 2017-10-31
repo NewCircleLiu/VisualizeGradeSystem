@@ -1,125 +1,106 @@
-﻿
-@{
-    ViewBag.Title = "用户登录";
+﻿@{
+    ViewBag.Title = "登录";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @Html.Partial("HomePartialView")
 
-
-<link href="@Url.Content("~/resouces/css/main.css")" rel="stylesheet" type="text/css">
-<link href="~/Resources/css/login-register.css" rel="stylesheet" />
-<style>
-    .btn-default, .widget-content input[type="button"] {
-    padding-bottom: 3px;
-    border-bottom: 2px solid #2185C5;
-    background: #2185C5;
-    color: #ffffff;
-    border-color: #2185C5;
-}
-</style>
+<link href="~/Resources/css/index.css" rel="stylesheet" />
+<link href="~/Resources/css/main.css" rel="stylesheet" type="text/css">
+<link href="~/Resources/css/contact.css" rel="stylesheet" media="all" />
+<link href="~/Resources/css/themify-icons.css" rel="stylesheet" />
 
 
-<div class="container" style="margin:100px">
-	<div class="row clearfix">
-		<div class="col-md-4 column">
-		</div>
-		<div class="col-md-4 column">
-			<h3>
-				登录
-			</h3>
-			<form role="form">
-                <p id="error" style="color:red;text-align:center">&nbsp;</p>
-				<div class="form-group">
-					 <label for="exampleInputEmail1">账号</label><input id="id" class="form-control" type="text" placeholder="账号" name="user_id" />
-				</div>
-				<div class="form-group">
-					 <label for="exampleInputPassword1">密码</label><input id="pass" class="form-control" type="password" placeholder="密码" name="user_pass" />
-				</div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1">验证码</label>
-                    <table>
-                        <tr>
-                            <td>
-                                <input class="form-control" placeholder="验证码" name="code" id="code" type="text"  style="width: 200px;">
-                            </td>
-                            <td>
-                                <a onclick="refreshCode()">
-                                                         
-                                <img id="codeimg" src="@Url.Content("~/VerifyCode")" style="border:solid 1px;width:110px;height:33px;margin-left:20px;"/>
-                                </a>
-                            </td>
-                        </tr>
-                    </table>
+<!--Index-->
+<div class="container">
+    <div class="fh5co-spacer fh5co-spacer-md"></div>
+    <div class="row" id="fh5co-features">
+        <div class="col-md-6 col-sm-4 text-center fh5co-feature feature-box">
+            <figure class="effect-sadie">
+                <div class="fh5co-feature-icon">
+                    <a href="#"><i class="ti-user"></i></a>
                 </div>
-                <center><input class="btn btn-default btn-login" type="button" value="Login" onclick="login()"></center>
-			</form>
-		</div>
-		<div class="col-md-4 column">
-		</div>
-	</div>
+                <h3 class="heading tm-figure-title">个人学习曲线</h3>
+                <p style="color: #8b969c; padding-top: 20px">点击这里可以查看你近期的学习变化曲线</p>
+            </figure>
+        </div>
+        <div class="col-md-6 col-sm-4 text-center fh5co-feature feature-box">
+            <figure class="effect-sadie">
+                <div class="fh5co-feature-icon">
+                    <a href="#"><i class="ti-bar-chart"></i></a>
+                </div>
+                <h3 class="heading">班级学习曲线</h3>
+                <p style="color: #8b969c; padding-top: 20px">点击这里可以查看你所在班级近期的学习变化曲线 </p>
+            </figure>
+        </div>
+
+
+
+        <div class="col-md-6 col-sm-4 text-center fh5co-feature feature-box">
+            <figure class="effect-sadie">
+                <div class="fh5co-feature-icon">
+                    <a href="#"><i class="ti-book"></i></a>
+                </div>
+                <h3 class="heading">知识点掌握情况</h3>
+                <p style="color: #8b969c; padding-top: 20px">点击这里可以查看你对知识点的掌握情况</p>
+            </figure>
+        </div>
+
+
+
+        <div class="col-md-6 col-sm-4 text-center fh5co-feature feature-box">
+            <figure class="effect-sadie">
+                <div class="fh5co-feature-icon">
+                    <a href="#"><i class="ti-help"></i></a>
+                </div>
+                <h3 class="heading">本站使用指南</h3>
+                <p style="color: #8b969c; padding-top: 20px">如果还不会使用，请看简单使用指南 </p>
+            </figure>
+        </div>
+    </div>
 </div>
 
 
+<div class="modal fade login" id="loginModal">
+    <div class="modal-dialog login animated">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">登录</h4>
+            </div>
+            <div class="modal-body">
+                <div class="box">
+                    <div class="content">
+                        <div class="form loginBox">
+                            <p id="error_info" style="color: red; text-align: center">&nbsp;</p>
+                            <form method="post" action="~/Login/CheckUser/" accept-charset="UTF-8">
+                                <input id="user_id" class="form-control" type="text" placeholder="账号" name="user_id">
+                                <input id="user_pass" class="form-control" type="password" placeholder="密码" name="user_pass">
+                                <div class="form-group">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <input class="form-control" placeholder="验证码" name="ValidateCode" id="ValidateCode" type="text" style="width: 200px;">
+                                            </td>
+                                            <td>
+                                                <a onclick="refreshCode()">
+                                                    <img id="codeImg" src="@Url.Content("~/VerifyCode")" style="border:solid 1px;width:110px;height:33px;margin-left:20px;"/>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <input class="btn btn-default btn-login" type="button" value="登录" onclick="login()">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Resources/js/custom/ShowLoginDialog.js"></script>
 <script>
-    /*
-        刷新验证码
-    */
-    function refreshCode() {
-        alert("a");
-        var codeImg = jQuery("#codeimg");
-        var time = new Date().getSeconds();
-        var url = "/VerifyCode?time=" + time;
-        codeImg.attr("src", url);
-    }
-
-
-    /*
-     登录
-
-
-    */
-
-
-    function login() {
-        //alert("abc");
-        var password = jQuery("#pass").val();
-        strmd5 = $.md5(password).toLocaleUpperCase();
-        if (jQuery("#id").val().length <= 0) {
-            jQuery("#error").text("请输入账号");
-            return;
-        }
-        if (jQuery("#pass").val().length <= 0) {
-            jQuery("#error").text("请输入密码");
-            return;
-        }
-        if (jQuery("#code").val().length <= 0) {
-            jQuery("#error").text("请输入验证码");
-            return;
-        }
-
-        jQuery.post(
-            "@Url.Content("~/Login/CheckUser/")",
-                {
-                    "account": jQuery("#id").val(),
-                    "password": strmd5,
-                    "verifycode": jQuery("#code").val()
-                },
-                function (data) {
-                    if (data == "error") {
-                        jQuery("#error").text("账号或密码错误");
-                        refreshCode();
-                    }
-                    else if (data == "ErrorCode") {
-                        jQuery("#error").text("验证码错误");
-                        refreshCode();
-                    }
-                    else if (data == "stu") {
-                        location.href = "@Url.Content("~/Student/Index/")";
-                    } else {
-                        location.href = "@Url.Content("~/Teacher/Index/")";
-                   }
-                }
-            );
-        }
+    openLoginModal();
 </script>

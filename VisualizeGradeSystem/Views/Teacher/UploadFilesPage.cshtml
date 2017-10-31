@@ -6,39 +6,33 @@
 @Html.Partial("HomePartialView_2")
 
 
-<link href="@Url.Content("~/resouces/css/main.css")" rel="stylesheet" type="text/css">
+<link href="~/Resources/css/main.css" rel="stylesheet" type="text/css">
 <link href="~/Resources/css/login-register.css" rel="stylesheet" />
-<style>
-    .btn-default, .widget-content input[type="button"] {
-    padding-bottom: 3px;
-    border-bottom: 2px solid #2185C5;
-    background: #2185C5;
-    color: #ffffff;
-    border-color: #2185C5;
-}
-</style>
+<link href="~/Resources/css/button.css" rel="stylesheet" />
 
+<div class="container" style="margin: 100px">
+    <div class="row clearfix">
 
-<div class="container" style="margin:100px">
-	<div class="row clearfix">
-		<div class="col-md-4 column">
-		</div>
-		<div class="col-md-4 column">
-			<h3>
-				上传成绩表格
-			</h3>
-			<form action="@Url.Content("~/Teacher/UploadFiles")" method="post" enctype="multipart/form-data">
-                <p id="error" style="color:red;text-align:center">&nbsp;</p>
-				<div class="form-group">
-					 <label for="exampleInputEmail1">选择文件</label>
-                     <input type="file" id="gradeExcel" value="选择成绩文件" name="uploadGrade"/>
-				</div>
+        <div class="col-md-4 column">
+        </div>
+
+        <div class="col-md-4 column">
+            <h3>上传成绩表格
+            </h3>
+            <form action="@Url.Content("~/Teacher/UploadFiles")" method="post" enctype="multipart/form-data">
+                <p id="error" style="color: red; text-align: center">&nbsp;</p>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">选择文件</label>
+                    <input type="file" id="gradeExcel" value="选择成绩文件" name="uploadGrade" />
+                </div>
                 <center><input class="btn btn-default btn-login" type="submit" value="上传" ></center>
-			</form>
-		</div>
-		<div class="col-md-4 column">
-		</div>
-	</div>
+            </form>
+        </div>
+
+        <div class="col-md-4 column">
+        </div>
+
+    </div>
 </div>
 
 

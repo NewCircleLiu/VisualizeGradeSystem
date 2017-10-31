@@ -35,8 +35,7 @@
 
 
 
-<!--<script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>-->
-<script src="~/Resources/js/utility/echarts.common.min.js"></script>
+<script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts图表
     // 基于准备好的dom，初始化echarts图表
@@ -65,8 +64,8 @@
         $.ajax({
             type: "post",
             async: false,
-            url: "@Url.Content("~/Student/PersonalLine/")",
-            data: {"subject":subject},
+            url: "@Url.Content("~/Student/GradeClassChart/")",
+            data: { "subject": subject },
             dataType: "json",
             success: function (result) {
                 if (result) {
@@ -83,8 +82,8 @@
         $.ajax({
             type: "post",
             async: false,
-            url: "@Url.Content("~/Student/PersonalLine_X/")",
-            data: {"subject":subject},
+            url: "@Url.Content("~/Student/GradeClassChart_X/")",
+            data: { "subject": subject },
             dataType: "json",
             success: function (result) {
                 x = [];
@@ -102,8 +101,8 @@
     GetX();
     var option = {
         title: {
-            text: '成绩曲线',
-            subtext: '@ViewBag.account'
+            text: '平均成绩曲线',
+            subtext: '@ViewBag.userclass'
         },
         tooltip: {
             trigger: 'axis'

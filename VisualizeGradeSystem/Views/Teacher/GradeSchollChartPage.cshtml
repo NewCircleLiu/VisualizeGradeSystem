@@ -3,14 +3,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@Html.Partial("HomePartialView")
+@Html.Partial("HomePartialView_2")
 
 <!--<script src="~/Resources/js/common/jquery-1.9.1.js"></script>-->
 
 <div class="container" style="margin: 100px">
     <div class="row clearfix">
         <div class="col-md-4 column">
-            <div class="col-md-4 column">
+            <div class="col-md-8 column">
                 <h3>选择</h3>
                 <form action="#" method="post" enctype="multipart/form-data" name="choose">
                     <p id="error" style="color: red; text-align: center">&nbsp;</p>
@@ -21,13 +21,18 @@
                             <option value="C">C语言</option>
                             <option value="所有">所有</option>
                         </select>
+                    </div>
+                    <div class="form-group">
                         <label for="exampleInputEmail1">选择院系</label>
                         <select id="depart" name="depart" onchange="select_change(this.selectedIndex)">
                         </select>
+                    </div>
+                    <div class="form-group">
                         <label for="exampleInputEmail1">选择班级</label>
                         <select id="class" name="class">
                         </select>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -122,10 +127,8 @@
         $("#class").change(function () {
             Class = $("#class").find("option:selected").text();
             clean();
-            alert("before:" + option.series.length);
             myChart = echarts.init(document.getElementById("chart"));
             update();
-            alert("after:" + option.series.length);
             myChart.setOption(option, true);
         });
     });
@@ -400,6 +403,5 @@
 
     // 为echarts对象加载数据
     myChart.setOption(option);
-    alert(option.series.length);
 
 </script>

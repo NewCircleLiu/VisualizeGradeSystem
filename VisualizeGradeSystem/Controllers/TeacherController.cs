@@ -115,7 +115,7 @@ namespace VisualizeGradeSystem.Controllers
                 //sc. = subject;
                 //sc.SaveChanges();
             }
-            return RedirectToAction("UploadFiles", "Teacher");
+            return RedirectToAction("UploadFilesPage", "Teacher");
         }
         [HttpPost]
         public ActionResult UploadFiles()

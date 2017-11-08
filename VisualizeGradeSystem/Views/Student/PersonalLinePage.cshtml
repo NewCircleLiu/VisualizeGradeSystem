@@ -4,47 +4,335 @@
 }
 
 @Html.Partial("HomePartialView")
+<style>
+    .btn-default, .widget-content input[type="button"] {
+        padding-bottom: 3px;
+        border-bottom: 2px solid #2185C5;
+        background: #2185C5;
+        color: #ffffff;
+        border-color: #2185C5;
+    }
+</style>
+<script src="~/Resources/js/utility/countUp.js"></script>
+<script type="text/javascript" src="~/Resources/js/utility/jquery.funnyText.min.js"></script>
+<link rel="stylesheet" type="text/css" href="~/Resources/css/jquery.funnyText.css" />
 
-<!--<script src="~/Resources/js/common/jquery-1.9.1.js"></script>-->
 
-<div class="container" style="margin: 100px">
+<div class="container" style="margin: 100px; margin-bottom: 50px">
     <div class="row clearfix">
-        <div class="col-md-4 column">
-            <div class="col-md-4 column">
-                <h3>选择考试科目
-                </h3>
-                <form action="#" method="post" enctype="multipart/form-data">
-                    <p id="error" style="color: red; text-align: center">&nbsp;</p>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">选择考试科目</label>
-                        <select id="subject" name="subject">
-                            <option value="Access">Access</option>
-                            <option value="C">C语言</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
+        <div class="col-md-4 column" style="width: 100%;">
+            <h3>选择考试科目</h3>
+            <form action="#" method="post" enctype="multipart/form-data">
+                <p id="error" style="color: red; text-align: center">&nbsp;</p>
+                <div class="form-group" style="text-align: center">
+                    <label for="exampleInputEmail1">选择考试科目</label>
+                    <select id="subject" name="subject">
+                        <option value="Access">Access</option>
+                        <option value="C">C语言</option>
+                    </select>
+                </div>
+            </form>
         </div>
-        <div class="col-md-4 column">
-            <div id="chart" style="height: 400px; width: 600px"></div>
+        <div class="col-md-8 column" id="chart" style="width: 100%; height: 400px">
         </div>
-        <div class="col-md-4 column">
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-4 column" style="text-align: center">
+            <input class="btn btn-default btn-login" type="button" value="看一看你在学校的地位" id="showRank" onclick="showRank()">
+        </div>
+        <div class="col-md-4 column" style="text-align: center">
+            <select id="whichTime" name="whichTime" onchange="select_change_time(this.selectedIndex)">
+            </select>
+        </div>
+        <div class="col-md-4 column" style="text-align: center">
+            <input class="btn btn-default btn-login" type="button" value="测一测你在学校的缘分" id="showSame" onclick="showSame()">
+        </div>
+    </div>
+    <div class="row clearfix" id="Rank1" style="display: none;margin-top:50px">
+        <div class="col-md-4 column" style="text-align: center">
+            <h3>参加本次考试的有</h3>
+            <h1 id="total_num"></h1>
+            <h3>位</h3>
+        </div>
+        <div class="col-md-4 column" style="text-align: center">
+            <h3>有</h3>
+            <h1 id="higher_5"></h1>
+            <h3>位比你高大约5分</h3>
+        </div>
+        <div class="col-md-4 column" style="text-align: center">
+            <h3>有</h3>
+            <h1 id="lower_5"></h1>
+            <h3>位比你低大约5分</h3>
+        </div>
+    </div>
+    <div class="row clearfix" id="Rank2" style="display: none;margin-top:50px">
+        <div class="col-md-4 column" style="text-align: center">
+            <h3>最高分：</h3>
+            <h1 id="max_score"></h1>
+            <h3 id="max_class">Ta来自：</h3>
+        </div>
+        <div class="col-md-4 column" style="text-align: center">
+            <h3>最低分：</h3>
+            <h1 id="min_score"></h1>
+            <h3 id="min_class">Ta来自：</h3>
+        </div>
+        <div class="col-md-4 column" style="text-align: center">
+            <h3>平均分</h3>
+            <h1 id="avg_score"></h1>
+            <h3 id="avg_relation"></h3>
+        </div>
+    </div>
+    <div class="row clearfix" id="Rank3" style="display: none">
+        <div class="col-md-12 column" style="text-align: center; width: 100%">
+            <h3 id="rank_name" class="text rank_name" style="font-size:7em;"></h3>
+        </div>
+    </div>
+    <div class="row clearfix" id="Same" style="display: none">
+        <div class="col-md-12 column" style="text-align: center">
+            <h3>有</h3>
+            <h1 id="equal"></h1>
+            <h3>位与你同分，快去寻找他们吧！</h3>
         </div>
     </div>
 </div>
+<script>
+    var total_num;
+    var higher_5;
+    var lower_5;
+    var max_score;
+    var min_score;
+    var avg_score;
+    var equal;
+    var avg_relation = document.getElementById("avg_relation");
+    var max_class = document.getElementById("max_class");
+    var min_class = document.getElementById("min_class");
+    var Rank1 = document.getElementById("Rank1");
+    var Rank2 = document.getElementById("Rank2");
+    var Rank3 = document.getElementById("Rank3");
+    var Same = document.getElementById("Same");
+    var Time = "第1次考试";
+    var l_5 = 0;
+    var h_5 = 0;
+    var eq = 0;
+    var min = 0;
+    var max = 0;
+    var min_c = "";
+    var max_c = "";
+    var user_score = 0;
+    var total = 0;
+    var avg = 0;
+</script>
+<script>
+    function showRank() {
+        var l_5 = 0;
+        var h_5 = 0;
+        var eq = 0;
+        var min = 0;
+        var max = 0;
+        var min_c = "";
+        var max_c = "";
+        var user_score = 0;
+        var total = 0;
+        var avg = 0;
+        $.ajax({
+            type: "post",
+            async: false,
+            url: "@Url.Content("~/Student/GetSomeData/")",
+            data: { "subject": subject, "time": Time },
+            dataType: "json",
+            success: function (result) {
+                if (result) {
+                    total = result[0];
+                    user_score = result[1];
+                    h_5 = result[2];
+                    l_5 = result[3];
+                    eq = result[4];
+                    max = result[5];
+                    max_c = result[6];
+                    min = result[7];
+                    min_c = result[8];
+                    avg = result[9];
+                }
+            }
+        });
+        total_num = new CountUp("total_num", 0, total, 0, 2.5);
+        higher_5 = new CountUp("higher_5", 0, h_5, 0, 2.5);
+        lower_5 = new CountUp("lower_5", 0, l_5, 0, 2.5);
+        max_score = new CountUp("max_score", 0, max, 0, 2.5);
+        min_score = new CountUp("min_score", 0, min, 0, 2.5);
+        avg_score = new CountUp("avg_score", 0, avg, 0, 2.5);
+        if (user_score > avg) {
+            avg = parseFloat(avg);
+            avg=avg.toFixed(2);
+            avg_relation.innerHTML = "真棒，你已经高于平均分" + eval(user_score - avg).toFixed(2) + "分了";
+        }
+        else {
+            avg = parseFloat(avg);
+            avg=avg.toFixed(2)
+            avg_relation.innerHTML = "加油，还差" + eval(avg - user_score).toFixed(2) + "分就可以赶上平均分啦";
+        }
+        max_class.innerHTML = "ta来自" + max_c;
+        min_class.innerHTML = "ta来自" + min_c;
+        Rank1.style.display = "block";
+        Rank2.style.display = "block";
+        Rank3.style.display = "block";
+        Same.style.display = "none";
+        total_num.start();
+        higher_5.start();
+        lower_5.start();
+        max_score.start();
+        min_score.start();
+        avg_score.start();
+        if (user_score >= 95) {
+            document.getElementById("rank_name").innerHTML = "最强王者";
+        }
+        else if (user_score >= 90) {
+            document.getElementById("rank_name").innerHTML = "至尊星耀";
+        }
+        else if (user_score >= 80) {
+            document.getElementById("rank_name").innerHTML = "钻石";
+        }
+        else if (user_score >= 70) {
+            document.getElementById("rank_name").innerHTML = "铂金";
 
-
-
-<!--<script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>-->
+        }
+        else if (user_score >= 60) {
+            document.getElementById("rank_name").innerHTML = "黄金";
+        }
+        else if (user_score >= 55) {
+            document.getElementById("rank_name").innerHTML = "白银";
+        }
+        else {
+            document.getElementById("rank_name").innerHTML = "青铜";
+        }
+        $('.rank_name').funnyText({
+        });
+    }
+    function showSame() {
+        equal = 0;
+        $.ajax({
+            type: "post",
+            async: false,
+            url: "@Url.Content("~/Student/GetSomeData/")",
+            data: { "subject": subject, "time": Time },
+            dataType: "json",
+            success: function (result) {
+                if (result) {
+                    total = result[0];
+                    user_score = result[1];
+                    h_5 = result[2];
+                    l_5 = result[3];
+                    eq = result[4];
+                    max = result[5];
+                    max_c = result[6];
+                    min = result[7];
+                    min_c = result[8];
+                    avg = result[9];
+                }
+            }
+        });
+        equal = new CountUp("equal", 0, eq, 0, 2.5);
+        Rank1.style.display = "none";
+        Rank2.style.display = "none";
+        Rank3.style.display = "none";
+        Same.style.display = "block";
+        equal.start();
+    }
+    function init() {
+        var timeEl = document.getElementById("whichTime");
+        timeEl.style.width = 150 + "px";
+        timeEl.length = x.length;
+        for (var i = 0; i < x.length; i++) {
+            timeEl.options[i].text = x[i];
+            timeEl.options[i].value = x[i];
+        }
+        timeEl.selectedIndex = 0;
+    }
+</script>
 <script src="~/Resources/js/utility/echarts.common.min.js"></script>
 <script type="text/javascript">
-    // 基于准备好的dom，初始化echarts图表
     // 基于准备好的dom，初始化echarts图表
     var subject = "Access";
     var myChart = echarts.init(document.getElementById("chart"));
     var y = [];
     var x = [];
     $(document).ready(function () {
+        $("#whichTime").change(function () {
+            Time = $("#subject").find("option:selected").text();
+            $.ajax({
+                type: "post",
+                async: false,
+                url: "@Url.Content("~/Student/GetSomeData/")",
+                data: { "subject": subject, "time": Time },
+                dataType: "json",
+                success: function (result) {
+                    if (result) {
+                        total = result[0];
+                        user_score = result[1];
+                        h_5 = result[2];
+                        l_5 = result[3];
+                        eq = result[4];
+                        max = result[5];
+                        max_c = result[6];
+                        min = result[7];
+                        min_c = result[8];
+                        avg = result[9];
+                    }
+                }
+            });
+            equal = new CountUp("euqal", 0, eq, 0, 2.5);
+            equal.start();
+            total_num = new CountUp("total_num", 0, total, 0, 2.5);
+            higher_5 = new CountUp("higer_5", 0, h_5, 0, 2.5);
+            lower_5 = new CountUp("lower_5", 0, l_5, 0, 2.5);
+            max_score = new CountUp("max_score", 0, max, 0, 2.5);
+            min_score = new CountUp("min_score", 0, min, 0, 2.5);
+            avg_score = new CountUp("avg_score", 0, avg, 0, 2.5);
+            if (user_score > avg) {
+                avg_relation.innerHTML = "真棒，你已经高于平均分" + eval(user_score - avg) + "分了";
+            }
+            else {
+                avg_relation.innerHTML = "加油，还差" + eval(avg - user_score) + "分就可以赶上平均分啦";
+            }
+            max_class.innerHTML = "ta来自" + max_c;
+            min_class.innerHTML = "ta来自" + min_c;
+            total_num.start();
+            higher_5.start();
+            lower_5.start();
+            max_score.start();
+            min_score.start();
+            avg_score.start();
+            if (user_score >= 95) {
+                document.getElementById("rank_name").innerHTML = "最强王者";
+            }
+            else if (user_score >= 90) {
+                document.getElementById("rank_name").innerHTML = "至尊星耀";
+            }
+            else if (user_score >= 80) {
+                document.getElementById("rank_name").innerHTML = "钻石";
+            }
+            else if (user_score >= 70) {
+                document.getElementById("rank_name").innerHTML = "铂金";
+
+            }
+            else if (user_score >= 60) {
+                document.getElementById("rank_name").innerHTML = "黄金";
+            }
+            else if (user_score >= 55) {
+                document.getElementById("rank_name").innerHTML = "白银";
+            }
+            else {
+                document.getElementById("rank_name").innerHTML = "青铜";
+            }
+            $('.rank_name').funnyText({
+                speed: 700,
+                activeColor: 'blue',
+                color: 'black',
+                fontSize: '4em',
+                direction: 'both'
+            });
+
+        });
         $("#subject").change(function () {
             subject = $("#subject").find("option:selected").text();
             x = [];
@@ -56,17 +344,23 @@
                 x = ['无考试成绩'];
                 y = [0];
             }
+            init();
             option.series[0].data = y;
             option.xAxis[0].data = x;
             myChart.setOption(option);
+            Rank1.style.display = "none";
+            Rank2.style.display = "none";
+            Rank3.style.display = "none";
+            Same.style.display = "none";
         });
+        init();
     });
     function arrTest() {
         $.ajax({
             type: "post",
             async: false,
             url: "@Url.Content("~/Student/PersonalLine/")",
-            data: {"subject":subject},
+            data: { "subject": subject },
             dataType: "json",
             success: function (result) {
                 if (result) {
@@ -84,7 +378,7 @@
             type: "post",
             async: false,
             url: "@Url.Content("~/Student/PersonalLine_X/")",
-            data: {"subject":subject},
+            data: { "subject": subject },
             dataType: "json",
             success: function (result) {
                 x = [];
@@ -103,7 +397,7 @@
     var option = {
         title: {
             text: '成绩曲线',
-            subtext: '@ViewBag.account'
+            subtext: '@ViewBag.account' + "-" + subject
         },
         tooltip: {
             trigger: 'axis'
@@ -159,6 +453,11 @@
     };
 
     // 为echarts对象加载数据
+    myChart.setOption(option, true);
+    window.onresize = function () {
+        myChart.resize();
+    };
     myChart.setOption(option);
+
 
 </script>

@@ -7,6 +7,7 @@ using VisualizeGradeSystem.Utils.filters;
 using VisualizeGradeSystem.Models.User;
 using System.Web.Security;
 using VisualizeGradeSystem.Models.Score;
+using VisualizeGradeSystem.Models.Knowledge;
 
 namespace VisualizeGradeSystem.Controllers
 {
@@ -15,6 +16,7 @@ namespace VisualizeGradeSystem.Controllers
         //
         // GET: /Student/
         ScoreContext sc = new ScoreContext();
+        KnowledgeContext kc = new KnowledgeContext();
         public ActionResult Index()
         {
             User u = (User)Session["User"];
@@ -41,6 +43,152 @@ namespace VisualizeGradeSystem.Controllers
             ViewBag.userclass=u.user_class;
             return View();
         }
+        [UserAuthorize]
+        public ActionResult KnowledgePage()
+        {
+            User u = (User)Session["User"];
+            ViewBag.account = u.user_account;
+            ViewBag.userclass = u.user_class;
+            return View();
+        }
+        [HttpPost]
+        public JsonResult GetSomeData(string subject,string time)
+        {
+            User u = (User)Session["User"];
+            Score[] list = sc.ScoreList.Where(s=>s.subject==subject).ToArray();
+            List<string> times = new List<string>();
+            List<string> data = new List<string>();
+            double user_score = 0;//它的分数
+            int higer_5 = 0; //比他低5分的人数
+            int lower_5 = 0; //比他高5分的人数
+            int equal = 0;
+            int max_i=0;
+            int min_i=0;
+            double avg = 0.0;
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (!times.Contains(list[i].uploadtime))
+                {
+                    times.Add(list[i].uploadtime); //有多少次考试
+                }
+            }
+            int start = time.IndexOf("第")+1;
+            int end = time.IndexOf("次") - 1;
+            time = time.Substring(start, end - start + 1);
+            int index = Convert.ToInt32(time)-1; //第一次考试index为0
+            string n = times[index];
+            list = sc.ScoreList.Where(s => s.uploadtime == n && s.subject==subject).ToArray();
+            //这次考试的情况
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (list[i].stu_id == u.user_account) //用户的分数
+                {
+                    user_score = list[i].score;
+                }
+                avg += list[i].score;
+            }
+            int total = list.Length;//总人数
+            avg=avg/total;//平均分
+            Math.Round(avg, 2);
+            for (int i = 0; i < list.Length; i++)
+            {
+                double temp=list[i].score-user_score; //分差
+                if (list[i].stu_id != u.user_account && (temp <= 5.5 && temp >= 4.5)) //高于5分的人数
+                {
+                    higer_5++;
+                }
+                if (list[i].stu_id != u.user_account && (temp >= -5.5 && temp <= -4.5)) //低于5分的人数
+                {
+                    lower_5++;
+                }
+                if (list[i].stu_id != u.user_account && temp == 0)
+                {
+                    equal++;
+                }
+            }
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (list[max_i].score < list[i].score)
+                {
+                    max_i = i;
+                }
+                if (list[min_i].score > list[i].score)
+                {
+                    min_i = i;
+                }
+            }
+            data.Add(total.ToString());
+            data.Add(user_score.ToString());
+            data.Add(higer_5.ToString());
+            data.Add(lower_5.ToString());
+            data.Add(equal.ToString());
+            data.Add(list[max_i].score.ToString());
+            data.Add(list[max_i].stu_class);
+            data.Add(list[min_i].score.ToString());
+            data.Add(list[min_i].stu_class);
+            data.Add(avg.ToString());
+            return Json(data);
+        }
+        [HttpPost]
+        public JsonResult GetKnowledge_X(string subject, string knowledge)
+        {
+            User u = (User)Session["User"];
+            Knowledge[] list = kc.KnowledgeList.Where(k => k.stu_id == u.user_account && k.subject == subject && k.knowledge_name == knowledge).ToArray();
+            List<string> time = new List<string>();
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (!time.Contains(list[i].uploadtime))
+                {
+                    time.Add(list[i].uploadtime); //有多少次考试
+                }
+            }
+            List<string> x = new List<string>();
+            int j=1;
+            foreach(string t in time)
+            {
+                x.Add("第" + j + "次考试");
+                j++;
+            }
+            return Json(x);
+        }
+        [HttpPost]
+        public JsonResult GetKnowledge(string subject,string knowledge) 
+            //哪一门课的,某一个知识点的各次的得分
+        {
+            User u = (User)Session["User"];
+            Knowledge[] list = kc.KnowledgeList.Where(k => k.stu_id == u.user_account && k.subject == subject && k.knowledge_name == knowledge).ToArray();
+            List<double> scoreList = new List<double>();
+            List<string> time = new List<string>();
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (!time.Contains(list[i].uploadtime))
+                {
+                    time.Add(list[i].uploadtime); //有多少次考试
+                }
+
+            }
+            //因为同一次考试，可能有好几个题，涉及到这个知识点，所有需要取平均：
+            foreach (string t in time)
+            {
+                double temp = 0.0;
+                int l = 0;
+                for (int i = 0; i < list.Length; i++)
+                {
+                    if (list[i].uploadtime.Equals(t))
+                    {
+                        temp += list[i].score;
+                        l++;
+                    }
+                }
+                if (l != 0)
+                {
+                    temp = temp / l;
+                    scoreList.Add(Math.Round(temp, 2));
+                }
+            }
+            return Json(scoreList);
+        }
+
         //获得当前学号成绩
         [HttpPost]
         public JsonResult PersonalLine(string subject)

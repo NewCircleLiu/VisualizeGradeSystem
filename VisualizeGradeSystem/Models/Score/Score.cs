@@ -18,7 +18,7 @@ namespace VisualizeGradeSystem.Models.Score
         public string uploadtime { get; set; }  //上传该文件的时间，区分各次考试
         public string stu_depart { get; set; }
         public string stu_class { get; set; }
-        public string subject { get; set; } 
-
+        public string subject { get; set; }
+        public string uploader { get; set; } //上传者
     }
 }

@@ -142,6 +142,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Knowledge\Knowledge.cs" />
+    <Compile Include="Models\Knowledge\KnowledgeContext.cs" />
+    <Compile Include="Models\Puzzle\Puzzle.cs" />
+    <Compile Include="Models\Puzzle\PuzzleContext.cs" />
     <Compile Include="Models\Score\Score.cs" />
     <Compile Include="Models\Score\ScoreContext.cs" />
     <Compile Include="Models\User\User.cs" />
@@ -162,10 +166,13 @@
     <Content Include="Resources\css\themify\themify.svg" />
     <Content Include="Resources\img\logo.png" />
     <Content Include="Resources\img\logo2.png" />
+    <Content Include="Resources\css\jquery.funnyText.css" />
+    <Content Include="Resources\js\utility\jquery.funnyText.min.js" />
     <Content Include="Resources\js\common\jquery-2.0.0.min.js" />
     <Content Include="Resources\js\common\jquery-3.2.1.min.js" />
     <Content Include="Resources\js\custom\ShowLoginDialog.js" />
     <Content Include="Resources\js\utility\collapse.js" />
+    <Content Include="Resources\js\utility\countUp.js" />
     <Content Include="Resources\js\utility\echarts.common.min.js" />
     <Content Include="Resources\Plugin\bootstrap\css\bootstrap-theme.css.map" />
     <Content Include="Resources\Plugin\bootstrap\css\bootstrap-theme.min.css.map" />
@@ -186,7 +193,6 @@
     <Content Include="Resources\js\common\jquery-1.8.2.js" />
     <Content Include="Resources\js\common\JQuery.md5.js" />
     <Content Include="Resources\js\custom\userLogin.js" />
-    <Content Include="Resources\js\custom\userSuggest.js" />
     <Content Include="Resources\Plugin\bootstrap\css\bootstrap-theme.css" />
     <Content Include="Resources\Plugin\bootstrap\css\bootstrap-theme.min.css" />
     <Content Include="Resources\Plugin\bootstrap\css\bootstrap.css" />
@@ -247,6 +253,15 @@
     <Content Include="Resources\Uploader\assets\fonts\jquery.filer-icons\jquery-filer.eot" />
     <Content Include="Resources\Uploader\assets\fonts\jquery.filer-icons\jquery-filer.ttf" />
     <Content Include="Resources\Uploader\assets\fonts\jquery.filer-icons\jquery-filer.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Teacher\ChooseKnowledgePage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Teacher\KnowledgePage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Student\KnowledgePage.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

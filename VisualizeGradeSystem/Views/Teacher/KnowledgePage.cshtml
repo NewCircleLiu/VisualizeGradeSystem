@@ -1,0 +1,483 @@
+﻿@{
+    ViewBag.Title = "知识点曲线_教师端";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("HomePartialView_2")
+
+
+<div class="container" style="margin: 100px">
+    <div class="row clearfix">
+        <div class="col-md-4 column" style="width: 100%;height:auto">
+            <h3>选择</h3>
+            <form action="#" method="post" enctype="multipart/form-data">
+                <p id="error" style="color: red; text-align: center">&nbsp;</p>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">选择考试科目</label>
+                    <select id="subject" name="subject">
+                        <option value="Access">Access</option>
+                        <option value="C">C语言</option>
+                    </select>
+                    <label for="exampleInputEmail1">选择知识点</label>
+                    <select id="knowledge1st" name="knowledge1st" onchange="select_change_knowledge(this.selectedIndex)">
+                    </select>
+                    <select id="knowledge2nd" name="knowledge2nd">
+                    </select>
+                    <label for="exampleInputEmail1">选择院系</label>
+                    <select id="depart" name="depart" onchange="select_change_depart(this.selectedIndex)">
+                    </select>
+                    <label for="exampleInputEmail1">选择班级</label>
+                    <select id="class" name="class">
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-8 column" id="chart" style="width: 100%; height: 400px">
+        </div>
+    </div>
+</div>
+
+<script src="~/Resources/js/utility/echarts.common.min.js"></script>
+<script type="text/javascript">
+    var arr_1st = ["全知识点", "数据库基础知识", "Access概述", "表与关系", "查询", "窗体", "报表"];
+    //一级知识点
+    var arr_2nd = [
+            ["全范围"],
+            ["数据库概述"],
+            ["数据库基本操作"],
+            ["全范围", "创建表", "字段属性设置", "表操作"],
+            ["全范围", "查询1", "查询2"],
+            ["窗体"],
+            ["报表"],
+    ];
+    var arr_depart = ["所有", "生态学院", "农牧学院草科系", "农牧学院农林系", "农牧学院动医系", "农牧学院动科系", "财经学院会财系", "财经学院工管系", "财经学院旅管系", "财经学院管科系", "财经学院财金系"];
+    var arr_class = [
+            ["所有"],
+            ["所有", "生技20151", "生技20152", "生技20153", "生物工程15", "环境生态15", "环科2015"],
+            ["所有", "草科2015"],
+            ["所有", "林学2015", "农学2015", "园艺2015"],
+            ["所有", "动医20151", "动医20152"],
+            ["所有", "动科2015"],
+            ["所有", "财务20151", "财务20152", "会计20151", "会计20152"],
+            ["所有", "工商20151", "工商20152"],
+            ["所有", "旅管2015", "行政2015"],
+            ["所有", "信管2015"],
+            ["所有", "金融20151", "金融20152"]
+    ];
+    var arr_subject = ["Access", "C"];
+    //二级知识点
+    function init() {
+        var knowledge1st = document.getElementById("knowledge1st");
+        knowledge1st.style.width = 150 + "px";
+        var knowledge2nd = document.getElementById("knowledge2nd");
+        knowledge2nd.style.width = 150 + "px";
+        //给下拉框赋值高度，才能在其里面写入内容
+        knowledge1st.length = arr_1st.length;
+        for (var i = 0; i < arr_1st.length; i++) {
+            knowledge1st.options[i].text = arr_1st[i];
+            knowledge1st.options[i].value = arr_1st[i];
+        }
+        //设置默认被选中的选项
+        var index = 1;
+        knowledge1st.selectedIndex = index;
+        //给knowledge2nd赋值高度，才能在其里面写入内容
+        knowledge2nd.length = arr_2nd[index].length;
+        for (var j = 0; j < arr_2nd[index].length; j++) {
+            knowledge2nd.options[j].text = arr_2nd[index][j];
+            knowledge2nd.options[j].value = arr_2nd[index][j];
+        }
+        var depart = document.getElementById("depart");
+        depart.style.width = 150 + "px";
+        var Class = document.getElementById("class");
+        Class.style.width = 150 + "px";
+        //给下拉框赋值高度，才能在其里面写入内容
+        depart.length = arr_depart.length;
+        for (var i = 0; i < arr_depart.length; i++) {
+            depart.options[i].text = arr_depart[i];
+            depart.options[i].value = arr_depart[i];
+        }
+        depart.selectedIndex = index;
+        //给city赋值高度，才能在其里面写入内容
+        Class.length = arr_class[index].length;
+        for (var j = 0; j < arr_class[index].length; j++) {
+            Class.options[j].text = arr_class[index][j];
+            Class.options[j].value = arr_class[index][j];
+        }
+
+    }
+    function select_change_knowledge(num) {
+        var knowledge2nd = document.getElementById("knowledge2nd");
+        knowledge2nd.length = 0;
+        knowledge2nd.length = arr_2nd[num].length;
+        for (var i = 0; i < arr_2nd[num].length; i++) {
+            knowledge2nd.options[i].text = arr_2nd[num][i];
+            knowledge2nd.options[i].value = arr_2nd[num][i];
+        }
+    }
+    function select_change_depart(num) {
+        var Class = document.getElementById("class");
+        Class.length = 0;
+        Class.length = arr_class[num].length;
+        for (var i = 0; i < arr_class[num].length; i++) {
+            Class.options[i].text = arr_class[num][i];
+            Class.options[i].value = arr_class[num][i];
+        }
+    }
+</script>
+<script type="text/javascript">
+    var subject = "Access";
+    var knowledge1st = "全知识点";
+    var knowledge2nd = "全范围";
+    var depart = "生态学院";
+    var Class = "环境生态15";
+    var knowledge = knowledge1st + "-" + knowledge2nd;
+    var myChart = echarts.init(document.getElementById("chart"));
+    var y = [];
+    var x = [];
+    var i = 0;
+    var j = 0;
+    var k = 0;
+    var size = 0;
+    var legend_data = [];
+    $(document).ready(function () {
+        $("#depart").change(function () {
+            depart = $("#depart").find("option:selected").text();
+            Class = "所有";
+            clean();
+            update();
+            myChart.setOption(option, true);
+        });
+        $("#class").change(function () {
+            Class = $("#class").find("option:selected").text();
+            clean();
+            update();
+            myChart.setOption(option, true);
+        });
+        $("#subject").change(function () {
+            subject = $("#subject").find("option:selected").text();
+            clean();
+            update();
+            myChart.setOption(option, true);
+        });
+
+        $("#knowledge1st").change(function () {
+            knowledge1st = $("#knowledge1st").find("option:selected").text();
+            knowledge2nd = arr_2nd[arr_1st.indexOf(knowledge1st)][0];
+            knowledge = knowledge1st + "-" + knowledge2nd;
+            clean();
+            update();
+            myChart.setOption(option, true);
+        });
+        $("#knowledge2nd").change(function () {
+            knowledge2nd = $("#knowledge2nd").find("option:selected").text();
+            knowledge = knowledge1st + "-" + knowledge2nd;
+            clean();
+            update();
+            myChart.setOption(option, true);
+        });
+    });
+    function clean() {
+        this.option.series = [];
+
+        size = 0;
+    }
+    function update() {
+        if (subject == "所有" && depart != "所有" && Class != "所有") {
+            legend_data = [];
+            for (i = 0; i < arr_subject.length; i++) {
+                x = [];
+                y = [];
+                y = GetY(arr_subject[i], Class, knowledge);
+                x = GetX(arr_subject[i], Class, knowledge);
+                if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                {
+                    x = ['无考试成绩'];
+                    y = [0];
+                }
+                this.option.series.push(
+                    {
+                        name: arr_subject[i] + "-" + depart + "-" + Class,
+                        type: 'bar',
+                        data: y
+                    }
+                );
+                legend_data.push(subject + "-" + Class);
+                this.option.xAxis[0].data = x;
+            }
+            option.legend.data = legend_data;
+        }
+        else if (subject !== "所有" && depart != "所有" && Class != "所有") {
+            x = [];
+            y = [];
+            legend_data = [];
+            y = GetY(subject, Class, knowledge);
+            x = GetX(subject, Class, knowledge);
+            if (typeof (y[0]) == "undefined")//证明没有找到成绩
+            {
+                x = ['无考试成绩'];
+                y = [0];
+            }
+            this.option.series[0] =
+                {
+                    name: subject + "-" + depart + "-" + Class,
+                    type: 'bar',
+                    data: y
+                };
+            this.option.xAxis[0].data = x;
+            legend_data.push(subject + "-" + Class);
+            option.legend.data = legend_data;
+        }
+        else if (subject != "所有" && depart == "所有" && Class != "所有") {
+            legend_data = [];
+            for (i = 1; i < arr_depart.length; i++) {
+                x = [];
+                y = [];
+                y = GetY(subject, Class, knowledge);
+                x = GetX(subject, Class, knowledge);
+                if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                {
+                    x = ['无考试成绩'];
+                    y = [0];
+                }
+                this.option.series.push(
+                    {
+                        name: subject + "-" + arr_depart[i] + "-" + Class,
+                        type: 'bar',
+                        data: y
+                    });
+                legend_data.push(subject + "-" + Class);
+                this.option.xAxis[0].data = x;
+            }
+            option.legend.data = legend_data;
+        }
+        else if (subject != "所有" && depart != "所有" && Class == "所有") {
+            legend_data = [];
+            for (i = 1; i < arr_class[arr_depart.indexOf(depart)].length; i++) {
+                x = [];
+                y = [];
+                y = GetY(subject, arr_class[arr_depart.indexOf(depart)][i], knowledge);
+                x = GetX(subject, arr_class[arr_depart.indexOf(depart)][i], knowledge);
+                if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                {
+                    x = ['无考试成绩'];
+                    y = [0];
+                }
+                this.option.series.push(
+                    {
+                        name: subject + "-" + depart + "-" + arr_class[arr_depart.indexOf(depart)][i],
+                        type: 'bar',
+                        data: y
+                    });
+                legend_data.push(subject + "-" + arr_class[arr_depart.indexOf(depart)][i]);
+                this.option.xAxis[0].data = x;
+            }
+            option.legend.data = legend_data;
+        }
+        else if (subject == "所有" && depart == "所有" && Class != "所有") {
+            legend_data = [];
+            for (i = 0; i < arr_subject.length; i++) {
+                for (j = 1; j < arr_depart.length; j++) {
+                    x = [];
+                    y = [];
+                    y = GetY(arr_subject[i], Class, knowledge);
+                    x = GetX(arr_subject[i], Class, knowledge);
+                    if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                    {
+                        x = ['无考试成绩'];
+                        y = [0];
+                    }
+                    this.option.series.push(
+                        {
+                            name: arr_subject[i] + "-" + arr_depart[j] + "-" + Class,
+                            type: 'bar',
+                            data: y
+                        });
+                    legend_data.push(arr_subject[i] + "-" + Class);
+                    this.option.xAxis[0].data = x;
+                }
+            }
+            option.legend.data = legend_data;
+        }
+        else if (subject == "所有" && depart != "所有" && Class == "所有") {
+            legend_data = [];
+            size = 0;
+            for (i = 0; i < arr_subject.length; i++) {
+                for (j = 1; j < arr_class[arr_depart.indexOf(depart)].length; j++) {
+                    x = [];
+                    y = [];
+                    y = GetY(arr_subject[i], arr_class[arr_depart.indexOf(depart)][j], knowledge);
+                    x = GetX(arr_subject[i], arr_class[arr_depart.indexOf(depart)][j], knowledge);
+                    if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                    {
+                        x = ['无考试成绩'];
+                        y = [0];
+                    }
+                    this.option.series.push(
+                        {
+                            name: arr_subject[i] + "-" + depart + "-" + arr_class[arr_depart.indexOf(depart)][j],
+                            type: 'bar',
+                            data: y
+                        });
+                    legend_data.push(arr_subject[i] + "-" + arr_class[arr_depart.indexOf(depart)][j]);
+                    this.option.xAxis[0].data = x;
+                }
+            }
+            option.legend.data = legend_data;
+        }
+        else if (subject != "所有" && depart == "所有" && Class == "所有") {
+            legend_data = [];
+            size = 0;
+            for (i = 1; i < arr_depart.length; i++) {
+                for (j = 1; j < arr_class[i].length; j++) {
+                    x = [];
+                    y = [];
+                    y = GetY(subject, arr_class[i][j], knowledge);
+                    x = GetX(subject, arr_class[i][j], knowledge);
+                    if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                    {
+                        x = ['无考试成绩'];
+                        y = [0];
+                    }
+                    this.option.series.push(
+                        {
+                            name: subject + "-" + arr_depart[i] + "-" + arr_class[i][j],
+                            type: 'bar',
+                            data: y
+                        });
+                    legend_data.push(subject + "-" + arr_class[i][j]);
+                    this.option.xAxis[0].data = x;
+                }
+            }
+            option.legend.data = legend_data;
+        }
+        else {
+            legend_data = [];
+            size = 0;
+            for (i = 0; i < arr_subject.length; i++) {
+                for (j = 1; j < arr_depart.length; j++) {
+                    for (k = 1; k < arr_class[j].length; k++) {
+                        x = [];
+                        y = [];
+                        y = GetY(arr_subject[i], arr_class[j][k], knowledge);
+                        x = GetX(arr_subject[i], arr_class[j][k], knowledge);
+                        if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                        {
+                            x = ['无考试成绩'];
+                            y = [0];
+                        }
+                        this.option.series.push(
+                            {
+                                name: arr_subject[i] + "-" + arr_depart[j] + "-" + arr_class[j][k],
+                                type: 'bar',
+                                data: y
+                            });
+                        option.xAxis[0].data = x;
+                        legend_data.push(arr_subject[i] + "-" + arr_class[j][k]);
+                    }
+                }
+            }
+            option.legend.data = legend_data;
+        }
+    }
+    function GetY(subject,Class,knowledge) {
+        $.ajax({
+            type: "post",
+            async: false,
+            url: "@Url.Content("~/Teacher/GetKnowledge/")",
+            data: { "subject": subject, "Class":Class ,"knowledge": knowledge },
+            dataType: "json",
+            success: function (result) {
+                if (result) {
+                    y = [];
+                    for (var i = 0; i < result.length; i++) {
+                        y.push(result[i]);
+                    }
+                }
+            }
+        })
+
+        return y;
+    }
+    function GetX(subject, Class, knowledge) {
+        $.ajax({
+            type: "post",
+            async: false,
+            url: "@Url.Content("~/Teacher/GetKnowledge_X/")",
+            data: { "subject": subject, "Class": Class, "knowledge": knowledge },
+            dataType: "json",
+            success: function (result) {
+                x = [];
+                if (result) {
+                    for (var i = 0; i < result.length; i++) {
+                        x.push(result[i]);
+                    }
+                }
+            }
+        })
+
+        return x;
+    }
+    y=GetY();
+    x=GetX();
+    var option = {
+        title: {
+            text: '成绩曲线',
+            subtext: '@ViewBag.account'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            type: 'scroll',
+            bottom: 10,
+            data: []
+        },
+        //右上角工具条
+        toolbox: {
+            show: true,
+            feature: {
+                mark: { show: true },
+                magicType: { show: true, type: ['line', 'bar'] },
+                restore: { show: true },
+                saveAsImage: { show: true }
+            }
+        },
+        calculable: true,
+        xAxis: [
+            {
+                type: 'category',
+                boundaryGap: false,
+                data: x
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} '
+                }
+            }
+        ],
+        series: [
+            {
+                name: '成绩曲线',
+                type: 'bar',
+                data: y,
+                markPoint: {
+                    data: [
+                        { type: 'max', name: '最大值' },
+                        { type: 'min', name: '最小值' }
+                    ]
+                },
+                markLine: {
+                    data: [
+                        { type: 'average', name: '平均值' }
+                    ]
+                }
+            }
+        ]
+    };
+    init();
+    // 为echarts对象加载数据
+    myChart.setOption(option, true);
+</script>

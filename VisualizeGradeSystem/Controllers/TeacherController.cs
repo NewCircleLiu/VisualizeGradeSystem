@@ -280,30 +280,46 @@ namespace VisualizeGradeSystem.Controllers
         public ActionResult UploadFiles()
         {
             HttpPostedFileBase file = Request.Files[0];
-            string fileName = file.FileName;
-            string saveUrl = Server.MapPath("/") + "UploadFiles/GradeExcel/";
-            Uploader up = new Uploader();
-            ReadExcel re = new ReadExcel();
-            up.UploadExcel(file, saveUrl);//上传文件到服务器上
-            filePath = saveUrl + file.FileName;
-            Score[] scoreArray = re.Read(filePath); //读取成绩
-            Puzzle[] puzzleArray = re.readPuzzle(filePath);//读取题型
-            User u = (User)Session["User"];
+            if (file.FileName != "")
+            {
+                string fileName = file.FileName;
+                string saveUrl = Server.MapPath("/") + "UploadFiles/GradeExcel/";
+                Uploader up = new Uploader();
+                ReadExcel re = new ReadExcel();
+                up.UploadExcel(file, saveUrl);//上传文件到服务器上
+                filePath = saveUrl + file.FileName;
+                Score[] scoreArray = re.Read(filePath); //读取成绩
+                Puzzle[] puzzleArray = re.readPuzzle(filePath);//读取题型
+                User u = (User)Session["User"];
 
-            for (int i = 0; i < scoreArray.Length; i++)
-            {
-                scoreArray[i].uploadtime = DateTime.Now.ToString("yyyy-MM-dd");
-                scoreArray[i].uploader = u.user_account;
-                sc.ScoreList.Add(scoreArray[i]);
+                for (int i = 0; i < scoreArray.Length; i++)
+                {
+                    scoreArray[i].uploadtime = DateTime.Now.ToString("yyyy-MM-dd");
+                    scoreArray[i].uploader = u.user_account;
+                    sc.ScoreList.Add(scoreArray[i]);
+                }
+                sc.SaveChanges();
+                for (int i = 0; i < puzzleArray.Length; i++)
+                {
+                    puzzleArray[i].uploader = u.user_account;
+                    pc.PuzzleList.Add(puzzleArray[i]);
+                }
+                pc.SaveChanges();
+                return RedirectToAction("ChooseSubjectPage", "Teacher");
             }
-            sc.SaveChanges();
-            for (int i = 0; i < puzzleArray.Length; i++)
+            else
             {
-                puzzleArray[i].uploader = u.user_account;
-                pc.PuzzleList.Add(puzzleArray[i]);
+                return RedirectToAction("UploadFilesPage", "Teacher", new { errorMsg = "未选择文件上传" });
             }
-            pc.SaveChanges();
-            return RedirectToAction("ChooseSubjectPage", "Teacher");
+        }
+        public ActionResult Guide()
+        {
+            if (Session["User"] != null)
+            {
+                User u = (User)Session["User"];
+                ViewBag.account = u.user_account;
+            }
+            return View();
         }
         //登出
         public ActionResult Logout()

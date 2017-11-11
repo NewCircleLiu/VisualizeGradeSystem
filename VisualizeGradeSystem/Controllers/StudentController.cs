@@ -51,6 +51,15 @@ namespace VisualizeGradeSystem.Controllers
             ViewBag.userclass = u.user_class;
             return View();
         }
+        public ActionResult Guide()
+        {
+            if (Session["User"] != null)
+            {
+                User u = (User)Session["User"];
+                ViewBag.account = u.user_account;
+            }
+            return View();
+        }
         [HttpPost]
         public JsonResult GetSomeData(string subject,string time)
         {
@@ -76,6 +85,20 @@ namespace VisualizeGradeSystem.Controllers
             int end = time.IndexOf("次") - 1;
             time = time.Substring(start, end - start + 1);
             int index = Convert.ToInt32(time)-1; //第一次考试index为0
+            if (index == -1)
+            {
+                data.Add("0");
+                data.Add(user_score.ToString());
+                data.Add(higer_5.ToString());
+                data.Add(lower_5.ToString());
+                data.Add(equal.ToString());
+                data.Add(list[max_i].score.ToString());
+                data.Add(list[max_i].stu_class);
+                data.Add(list[min_i].score.ToString());
+                data.Add(list[min_i].stu_class);
+                data.Add(avg.ToString());
+                return Json(data);
+            }
             string n = times[index];
             list = sc.ScoreList.Where(s => s.uploadtime == n && s.subject==subject).ToArray();
             //这次考试的情况
@@ -293,5 +316,6 @@ namespace VisualizeGradeSystem.Controllers
             Session.Clear();
             return RedirectToAction("", "Student");
         }
+        
     }
 }

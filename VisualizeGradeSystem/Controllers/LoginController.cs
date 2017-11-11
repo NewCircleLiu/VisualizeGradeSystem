@@ -21,23 +21,30 @@ namespace VisualizeGradeSystem.Controllers
             User currentUser = null;
             //string returnInfo = managerService.checkManager(account, password, out currentManager);
             var exsit = uc.UserList.Where(u => u.user_account == account && u.user_password == password).ToList();
-
-            if (Session["ValidateCode"].ToString() != verifycode)
+            if (Session["ValidateCode"] != null)
             {
-                return Content("ErrorCode");
-            }
-            else
-            {
-                if (exsit.Count() <= 0)
+                if (Session["ValidateCode"].ToString() != verifycode)
                 {
-                    return Content("error");
+                    return Content("ErrorCode");
                 }
                 else
                 {
-                    currentUser = exsit[0];
-                    Session["User"] = currentUser;
-                    return Content(currentUser.user_kind);
+                    if (exsit.Count() <= 0)
+                    {
+                        return Content("error");
+                    }
+                    else
+                    {
+                        currentUser = exsit[0];
+                        Session["User"] = currentUser;
+                        return Content(currentUser.user_kind);
+                    }
                 }
+            }
+            else
+            {
+                ViewBag.error = "请重新填写验证码";
+                return RedirectToAction("Index", "Login");
             }
         }
 

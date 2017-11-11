@@ -71,7 +71,7 @@
                 <div class="box">
                     <div class="content">
                         <div class="form loginBox">
-                            <p id="error_info" style="color: red; text-align: center">&nbsp;</p>
+                            <p id="error_info" style="color: red; text-align: center">@ViewBag.error</p>
                             <form method="post" action="~/Login/CheckUser/" accept-charset="UTF-8">
                                 <input id="user_id" class="form-control" type="text" placeholder="账号" name="user_id">
                                 <input id="user_pass" class="form-control" type="password" placeholder="密码" name="user_pass">

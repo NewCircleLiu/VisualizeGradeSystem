@@ -161,12 +161,35 @@
     <Content Include="Resources\css\button.css" />
     <Content Include="Resources\css\HomePartialView.css" />
     <Content Include="Resources\css\index.css" />
+    <Content Include="Resources\css\jquery.funnyText.css" />
     <Content Include="Resources\css\login-register.css" />
     <Content Include="Resources\css\themify-icons.css" />
     <Content Include="Resources\css\themify\themify.svg" />
     <Content Include="Resources\img\logo.png" />
     <Content Include="Resources\img\logo2.png" />
-    <Content Include="Resources\css\jquery.funnyText.css" />
+    <Content Include="Resources\img\numbers\num_1.png" />
+    <Content Include="Resources\img\numbers\num_2.png" />
+    <Content Include="Resources\img\numbers\num_3.png" />
+    <Content Include="Resources\img\numbers\num_4.png" />
+    <Content Include="Resources\img\steps\stu_step1.jpg" />
+    <Content Include="Resources\img\steps\stu_step1_m.jpg" />
+    <Content Include="Resources\img\steps\stu_step2.jpg" />
+    <Content Include="Resources\img\steps\stu_step2_m.jpg" />
+    <Content Include="Resources\img\steps\stu_step3.jpg" />
+    <Content Include="Resources\img\steps\stu_step3_m.jpg" />
+    <Content Include="Resources\img\steps\stu_step4.jpg" />
+    <Content Include="Resources\img\steps\stu_step4_4.jpg" />
+    <Content Include="Resources\img\steps\teacher_step1.jpg" />
+    <Content Include="Resources\img\steps\teacher_step1_m.jpg" />
+    <Content Include="Resources\img\steps\teacher_step2.jpg" />
+    <Content Include="Resources\img\steps\teacher_step2_m.jpg" />
+    <Content Include="Resources\img\steps\teacher_step3.jpg" />
+    <Content Include="Resources\img\steps\teacher_step3_m.jpg" />
+    <Content Include="Resources\img\steps\teacher_step4.jpg" />
+    <Content Include="Resources\img\steps\teacher_step4_m.jpg" />
+    <Content Include="Resources\js\utility\CSSPlugin.min.js" />
+    <Content Include="Resources\js\utility\EasePack.min.js" />
+    <Content Include="Resources\js\utility\FunnyFont.js" />
     <Content Include="Resources\js\utility\jquery.funnyText.min.js" />
     <Content Include="Resources\js\common\jquery-2.0.0.min.js" />
     <Content Include="Resources\js\common\jquery-3.2.1.min.js" />
@@ -174,6 +197,10 @@
     <Content Include="Resources\js\utility\collapse.js" />
     <Content Include="Resources\js\utility\countUp.js" />
     <Content Include="Resources\js\utility\echarts.common.min.js" />
+    <Content Include="Resources\js\utility\jquery.imgbox.pack.js" />
+    <Content Include="Resources\js\utility\jquery.min.js" />
+    <Content Include="Resources\js\utility\jquery.qrcode.min.js" />
+    <Content Include="Resources\js\utility\TweenLite.min.js" />
     <Content Include="Resources\Plugin\bootstrap\css\bootstrap-theme.css.map" />
     <Content Include="Resources\Plugin\bootstrap\css\bootstrap-theme.min.css.map" />
     <Content Include="Resources\Plugin\bootstrap\css\bootstrap.css.map" />
@@ -262,6 +289,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Student\KnowledgePage.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Student\Guide.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Teacher\Guide.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

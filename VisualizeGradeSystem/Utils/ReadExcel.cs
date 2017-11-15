@@ -82,27 +82,37 @@ namespace VisualizeGradeSystem.Utils
             //LastRowNum 是当前表的总行数-1（注意）
             //int offset = 0;
             fs.Close();
-            for (int i = 1; i <= sheet.LastRowNum; i++)
+
+            for (int i = 1; i < sheet.LastRowNum; i++)
             {
-                row = sheet.GetRow(i);  //读取当前行数据
-                if (row != null)
+                try
                 {
-                    //LastCellNum 是当前行的总列数
-                    Puzzle p = new Puzzle();
-                    if (name.Contains(GetCellValue(row.GetCell(1)).ToString()))
+                    row = sheet.GetRow(i);  //读取当前行数据
+                    if (row != null)
                     {
-                        //填空(1)
-                        p.puzzle_name = GetCellValue(row.GetCell(1)).ToString() + "(" + index + ")";
+                        if (row.GetCell(1) != null)
+                        {
+                            //LastCellNum 是当前行的总列数
+                            Puzzle p = new Puzzle();
+                            if (name.Contains(GetCellValue(row.GetCell(1)).ToString()))
+                            {
+                                //填空(1)
+                                p.puzzle_name = GetCellValue(row.GetCell(1)).ToString() + "(" + index + ")";
+                            }
+                            else
+                            {
+                                index = 1;
+                                name.Add(GetCellValue(row.GetCell(1)).ToString());
+                                p.puzzle_name = GetCellValue(row.GetCell(1)).ToString() + "(" + index + ")";
+                            }
+                            p.uploadtime = DateTime.Now.ToString("yyyy-MM-dd");
+                            p.puzzle_fullscore = Convert.ToDouble(GetCellValue(row.GetCell(3)).ToString());
+                            list.Add(p);
+                        }
                     }
-                    else
-                    {
-                        index = 1;
-                        name.Add(GetCellValue(row.GetCell(1)).ToString());
-                        p.puzzle_name = GetCellValue(row.GetCell(1)).ToString() + "(" + index + ")";
-                    }
-                    p.uploadtime = DateTime.Now.ToString("yyyy-MM-dd");
-                    p.puzzle_fullscore = Convert.ToDouble(GetCellValue(row.GetCell(3)).ToString());
-                    list.Add(p);
+                }
+                catch (Exception) {
+                    continue;
                 }
             }
             return list.ToArray();
@@ -130,7 +140,7 @@ namespace VisualizeGradeSystem.Utils
             IRow row = null;  //读取当前行数据
             //LastRowNum 是当前表的总行数-1（注意）
             //int offset = 0;
-            for (int i = 1; i <= sheet.LastRowNum; i++)
+            for (int i = 1; i < sheet.LastRowNum; i++)
             {
                 row = sheet.GetRow(i);  //读取当前行数据
                 if (row != null)

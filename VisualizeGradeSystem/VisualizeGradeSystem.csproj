@@ -157,6 +157,24 @@
     <Compile Include="Utils\ValidateCode.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Knowledge.mdf" />
+    <Content Include="App_Data\Knowledge_log.ldf">
+      <DependentUpon>Knowledge.mdf</DependentUpon>
+    </Content>
+    <Content Include="App_Data\Puzzle.mdf" />
+    <Content Include="App_Data\Puzzle_log.ldf">
+      <DependentUpon>Puzzle.mdf</DependentUpon>
+    </Content>
+    <Content Include="App_Data\Score.mdf" />
+    <Content Include="App_Data\Score_log.ldf">
+      <DependentUpon>Score.mdf</DependentUpon>
+    </Content>
+    <Content Include="App_Data\User.mdf" />
+    <Content Include="App_Data\User_log.ldf">
+      <DependentUpon>User.mdf</DependentUpon>
+    </Content>
+    <Content Include="bin\VisualizeGradeSystem.dll" />
+    <Content Include="bin\VisualizeGradeSystem.pdb" />
     <Content Include="Global.asax" />
     <Content Include="Resources\css\button.css" />
     <Content Include="Resources\css\HomePartialView.css" />
@@ -178,7 +196,7 @@
     <Content Include="Resources\img\steps\stu_step3.jpg" />
     <Content Include="Resources\img\steps\stu_step3_m.jpg" />
     <Content Include="Resources\img\steps\stu_step4.jpg" />
-    <Content Include="Resources\img\steps\stu_step4_4.jpg" />
+    <Content Include="Resources\img\steps\stu_step4_m.jpg" />
     <Content Include="Resources\img\steps\teacher_step1.jpg" />
     <Content Include="Resources\img\steps\teacher_step1_m.jpg" />
     <Content Include="Resources\img\steps\teacher_step2.jpg" />
@@ -270,9 +288,7 @@
     <Content Include="Views\Student\GradeClassChartPage.cshtml" />
     <Content Include="Views\Teacher\GradeSchollChartPage.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
@@ -295,6 +311,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Teacher\Guide.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Student\ModifyPassword.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Teacher\ModifyPassword.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="UploadFiles\GradeExcel\2016-2017-2 15DB01.xls" />
+    <Content Include="UploadFiles\GradeExcel\2016-2017-2 15DB02.xls" />
+    <Content Include="UploadFiles\GradeExcel\2016-2017-2 15DB03.xls" />
+    <Content Include="UploadFiles\GradeExcel\2016-2017-2 15DB05.xls" />
+    <Content Include="UploadFiles\GradeExcel\考试系统某一次导出的数据形式.xls" />
+    <Content Include="UploadFiles\GradeExcel\课程阶段正式测试01 2014all - 副本.xls" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\Default Settings %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

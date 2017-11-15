@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Resources/css")
+    @Scripts.Render("~/Resources/js")
+
+    <script src="~/Resources/js/common/jquery-3.2.1.min.js"></script>
+    <script src="~/Resources/js/utility/collapse.js"></script>
+    <script src="~/Resources/Plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Resources/js/common/JQuery.md5.js"></script>
+
+    <link href="~/Resources/css/app.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="~/Resources/img/logo.ico" />
+</head>
+
+<body>
+
+
+    @RenderBody()
+
+    <div class="footer" style="margin-top: 20px">
+        <div class="container">
+            <div class="col-md-12" style="color: white; text-align: center; font-family: '微软雅黑'">
+                <p style="font-size: 16px; margin-bottom: 8px">Copyright &copy;青海大学计算机系版权所有.</p>
+                <p style="font-size: 16px; margin-bottom: 8px">管理员邮箱：landoif_phin@163.com.</p>
+                <div class="clearfix"></div>
+            </div>
+
+        </div>
+    </div>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

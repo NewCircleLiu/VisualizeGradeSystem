@@ -1,0 +1,105 @@
+﻿@{
+    ViewBag.Title = "上传页面";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("HomePartialView_2")
+
+<script src="~/Resources/js/utility/collapse.js"></script>
+<link href="~/Resources/css/main.css" rel="stylesheet" dtype="text/css">
+<link href="~/Resources/css/login-register.css" rel="stylesheet" />
+<link href="~/Resources/css/button.css" rel="stylesheet" />
+<link href="~/Resources/Uploader/css/jquery.filer.css" type="text/css" rel="stylesheet" />
+<link href="~/Resources/Uploader/css/jquery.filer-dragdropbox-theme.css" type="text/css" rel="stylesheet" />
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="~/Resources/Uploader/js/jquery.filer.min.js"></script>
+<div class="container" style="margin-top: 100px; margin-bottom: 100px;text-align:center">
+    <div class="row clearfix">
+
+        <div class="col-md-4 column">
+        </div>
+
+        <div class="col-md-4 column">
+            <h3>上传成绩表格
+            </h3>
+            <form action="@Url.Content("~/Teacher/UploadFiles")" method="post" enctype="multipart/form-data">
+                <p id="error" style="color: red; text-align: center">@Request.Params["errorMsg"]</p>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">选择文件</label>
+                    <input type="file" id="gradeExcel" value="选择成绩文件" name="uploadGrade" />
+                </div>
+                <center><input class="btn btn-default btn-login" type="submit" value="上传" ></center>
+            </form>
+        </div>
+
+        <div class="col-md-4 column">
+        </div>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#gradeExcel').filer({
+            changeInput: '<div class="jFiler-input-dragDrop"><div class="jFiler-input-inner"><div class="jFiler-input-icon"><i class="icon-jfi-folder"></i></div><div class="jFiler-input-text"><h3>点击文件夹</h3> <span style="display:inline-block; margin: 15px 0">or</span></div><a class="jFiler-input-choose-btn blue">浏览文件</a></div></div>',
+            showThumbs: true,
+            limit:1,
+            theme: "dragdropbox",
+            templates: {
+                box: '<ul class="jFiler-items-list jFiler-items-grid"></ul>',
+                item: '<li class="jFiler-item">\
+                    <div class="jFiler-item-container">\
+                        <div class="jFiler-item-inner">\
+                            <div class="jFiler-item-thumb">\
+                                <div class="jFiler-item-status"></div>\
+                                <div class="jFiler-item-info">\
+                                    <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name | limitTo: 25}}</b></span>\
+                                    <span class="jFiler-item-others">{{fi-size2}}</span>\
+                                </div>\
+                                {{fi-image}}\
+                            </div>\
+                            <div class="jFiler-item-assets jFiler-row">\
+                                <ul class="list-inline pull-left">\
+                                    <li>{{fi-progressBar}}</li>\
+                                </ul>\
+                                <ul class="list-inline pull-right">\
+                                    <li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
+                                </ul>\
+                            </div>\
+                        </div>\
+                    </div>\
+                </li>',
+                itemAppend: '<li class="jFiler-item">\
+                        <div class="jFiler-item-container">\
+                            <div class="jFiler-item-inner">\
+                                <div class="jFiler-item-thumb">\
+                                    <div class="jFiler-item-status"></div>\
+                                    <div class="jFiler-item-info">\
+                                        <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name | limitTo: 25}}</b></span>\
+                                        <span class="jFiler-item-others">{{fi-size2}}</span>\
+                                    </div>\
+                                    {{fi-image}}\
+                                </div>\
+                                <div class="jFiler-item-assets jFiler-row">\
+                                    <ul class="list-inline pull-left">\
+                                        <li><span class="jFiler-item-others">{{fi-icon}}</span></li>\
+                                    </ul>\
+                                    <ul class="list-inline pull-right">\
+                                        <li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
+                                    </ul>\
+                                </div>\
+                            </div>\
+                        </div>\
+                    </li>',
+                itemAppendToEnd: false,
+                removeConfirmation: true,
+                _selectors: {
+                    list: '.jFiler-items-list',
+                    item: '.jFiler-item',
+                    remove: '.jFiler-item-trash-action'
+                }
+            }
+        }
+            );
+    });
+</script>
+

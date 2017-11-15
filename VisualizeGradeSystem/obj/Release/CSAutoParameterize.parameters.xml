@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="Score-Context-Web.config Connection String" description="Score-Context 由应用程序在 web.config 中用来访问数据库的连接字符串。" defaultValue="Data Source=(localdb)\.\share_DB; Initial Catalog=Score; Integrated Security=True; MultipleActiveResultSets=True; AttachDbFilename=|DataDirectory|Score.mdf" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\IMAC\\documents\\visual\ studio\ 2012\\Projects\\VisualizeGradeSystem\\VisualizeGradeSystem\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='Score-Context']/@connectionString" />
+  </parameter>
+  <parameter name="User-Context-Web.config Connection String" description="User-Context 由应用程序在 web.config 中用来访问数据库的连接字符串。" defaultValue="Data Source=(localdb)\.\share_DB; Initial Catalog=User; Integrated Security=True; MultipleActiveResultSets=True; AttachDbFilename=|DataDirectory|User.mdf" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\IMAC\\documents\\visual\ studio\ 2012\\Projects\\VisualizeGradeSystem\\VisualizeGradeSystem\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='User-Context']/@connectionString" />
+  </parameter>
+  <parameter name="Knowledge-Context-Web.config Connection String" description="Knowledge-Context 由应用程序在 web.config 中用来访问数据库的连接字符串。" defaultValue="Data Source=(localdb)\.\share_DB; Initial Catalog=Knowledge; Integrated Security=True; MultipleActiveResultSets=True; AttachDbFilename=|DataDirectory|Knowledge.mdf" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\IMAC\\documents\\visual\ studio\ 2012\\Projects\\VisualizeGradeSystem\\VisualizeGradeSystem\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='Knowledge-Context']/@connectionString" />
+  </parameter>
+  <parameter name="Puzzle-Context-Web.config Connection String" description="Puzzle-Context 由应用程序在 web.config 中用来访问数据库的连接字符串。" defaultValue="Data Source=(localdb)\.\share_DB; Initial Catalog=Puzzle; Integrated Security=True; MultipleActiveResultSets=True; AttachDbFilename=|DataDirectory|Puzzle.mdf" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\IMAC\\documents\\visual\ studio\ 2012\\Projects\\VisualizeGradeSystem\\VisualizeGradeSystem\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='Puzzle-Context']/@connectionString" />
+  </parameter>
+</parameters>

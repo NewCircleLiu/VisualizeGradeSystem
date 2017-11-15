@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "上传页面";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("HomePartialView_2")
+
+
+<link href="~/resouces/css/main.css" rel="stylesheet" type="text/css">
+<link href="~/Resources/css/login-register.css" rel="stylesheet" />
+<link href="~/Resources/css/button.css" rel="stylesheet" />
+
+<div class="container" style="margin: 100px">
+    <div class="row clearfix">
+        <div class="col-md-4 column">
+        </div>
+        <div class="col-md-4 column">
+            <h3>选择本次考试科目
+            </h3>
+            <form action="@Url.Content("~/Teacher/ChooseSubject/")" method="post" enctype="multipart/form-data">
+                <p id="error" style="color: red; text-align: center">&nbsp;</p>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">选择考试科目</label>
+                    <select id="subject" name="subject">
+                        <option value="C">C语言</option>
+                        <option value="Access">Access</option>
+                    </select>
+                </div>
+                <center><input class="btn btn-default btn-login" type="submit" value="ok"></center>
+            </form>
+        </div>
+        <div class="col-md-4 column">
+        </div>
+    </div>
+</div>

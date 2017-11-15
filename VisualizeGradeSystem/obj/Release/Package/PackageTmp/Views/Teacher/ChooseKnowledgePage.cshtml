@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "知识点选择";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Html.Partial("HomePartialView_2")
+@using VisualizeGradeSystem.Models.Knowledge
+@using VisualizeGradeSystem.Models.Puzzle
+@model  IEnumerable<Puzzle>
+@{
+    IEnumerable<Puzzle> puzzlesList = from items in Model select items;
+    Puzzle[] puzzleArray = puzzlesList.ToArray();   
+}
+
+<link href="~/resouces/css/main.css" rel="stylesheet" type="text/css">
+<link href="~/Resources/css/login-register.css" rel="stylesheet" />
+<link href="~/Resources/css/button.css" rel="stylesheet" />
+<div class="container" style="margin: 100px">
+    <div class="row clearfix">
+        <div class="col-md-2 column">
+        </div>
+        <div class="col-md-8 column">
+            <h3>选择每个题目的知识点
+            </h3>
+            <form action="@Url.Content("~/Teacher/ChooseKnowledge_Access/")" method="post" name="ChooseKnowledge">
+                @for (int i = 0; i < puzzleArray.Length; i++)
+                {
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">第@(i + 1)题:@puzzleArray[i].puzzle_name:</label>
+                        <select id="knowledge1st-@i" name="knowledge1st-@i" onchange="select_change(this.selectedIndex,@i)">
+                        </select>
+                        &nbsp;&nbsp;&nbsp;
+                        <select id="knowledge2nd-@i" name="knowledge2nd-@i">
+                        </select>
+                    </div>
+                }
+                <center><input class="btn btn-default btn-login" type="submit" value="ok"></center>
+            </form>
+        </div>
+        <div class="col-md-2 column">
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    var arr_1st = ["全知识点", "数据库基础知识", "Access概述", "表与关系", "查询", "窗体", "报表"];
+    //一级知识点
+    var arr_2nd = [
+            ["全范围"],
+            ["数据库概述"],
+            ["数据库基本操作"],
+            ["全范围", "创建表", "字段属性设置", "表操作"],
+            ["全范围", "查询1", "查询2"],
+            ["窗体"],
+            ["报表"],
+    ];
+    //二级知识点
+    function init(len) {
+        for (var k = 0; k < len; k++) {
+            var knowledge1st = document.getElementById("knowledge1st-" + k);
+            knowledge1st.style.width = 150 + "px";
+            var knowledge2nd = document.getElementById("knowledge2nd-" + k);
+            knowledge2nd.style.width = 150 + "px";
+            //给下拉框赋值高度，才能在其里面写入内容
+            knowledge1st.length = arr_1st.length;
+            for (var i = 0; i < arr_1st.length; i++) {
+                knowledge1st.options[i].text = arr_1st[i];
+                knowledge1st.options[i].value = arr_1st[i];
+            }
+            //设置默认被选中的选项
+            var index = 1;
+            knowledge1st.selectedIndex = index;
+            //给knowledge2nd赋值高度，才能在其里面写入内容
+            knowledge2nd.length = arr_2nd[index].length;
+            for (var j = 0; j < arr_2nd[index].length; j++) {
+                knowledge2nd.options[j].text = arr_2nd[index][j];
+                knowledge2nd.options[j].value = arr_2nd[index][j];
+            }
+        }
+
+    }
+    function select_change(num, i) {
+        var knowledge2nd = document.getElementById("knowledge2nd-" + i);
+        knowledge2nd.length = 0;
+        knowledge2nd.length = arr_2nd[num].length;
+        for (var i = 0; i < arr_2nd[num].length; i++) {
+            knowledge2nd.options[i].text = arr_2nd[num][i];
+            knowledge2nd.options[i].value = arr_2nd[num][i];
+        }
+    }
+    init(@puzzleArray.Length);
+</script>

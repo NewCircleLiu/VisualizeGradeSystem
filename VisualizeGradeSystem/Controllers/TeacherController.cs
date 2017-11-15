@@ -20,6 +20,8 @@ namespace VisualizeGradeSystem.Controllers
         private ScoreContext sc = new ScoreContext();
         private PuzzleContext pc = new PuzzleContext();
         private KnowledgeContext kc = new KnowledgeContext();
+        private UserContext uc = new UserContext();
+
         private static string filePath;
         //首页
         public ActionResult Index()
@@ -47,6 +49,33 @@ namespace VisualizeGradeSystem.Controllers
             ViewBag.account = u.user_account;
             return View();
         }
+        public ActionResult ModifyPassword()
+        {
+            User u = (User)Session["User"];
+            ViewBag.account = u.user_account;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Modify(string old_pass, string new_pass)
+        {
+            User u = (User)Session["User"];
+            ViewBag.account = u.user_account;
+            var exsit = uc.UserList.Where(user => user.user_account == u.user_account && user.user_password == old_pass).ToList();
+            if (exsit == null)
+            {
+                return Content("旧密码错误，请重新输入");
+            }
+            else
+            {
+                u.user_account = new_pass;
+                uc.UserList.Attach(u);
+                uc.Entry(u).State = System.Data.EntityState.Modified;
+                uc.SaveChanges();
+                FormsAuthentication.SignOut();
+                Session.Clear();
+                return RedirectToAction("", "Student");
+            }
+        }
         //选择科目页面
         public ActionResult ChooseSubjectPage()
         {
@@ -58,8 +87,9 @@ namespace VisualizeGradeSystem.Controllers
         public ActionResult ChooseKnowledgePage()
         {
             User u = (User)Session["User"];
+            string today = DateTime.Now.ToString("yyyy-MM-dd");
             ViewBag.account = u.user_account;
-            return View(pc.PuzzleList.ToList());
+            return View(pc.PuzzleList.Where(p=> p.uploadtime==today).ToList());
         }
         //全校成绩页面
         [UserAuthorize]
@@ -186,11 +216,11 @@ namespace VisualizeGradeSystem.Controllers
             Score[] list;
             if (u.user_kind == "admin")
             {
-                list = sc.ScoreList.Where(s => s.subject == subject && s.stu_depart == depart && s.stu_class == Class).ToArray();
+                list = sc.ScoreList.Where(s => s.subject == subject && s.stu_class == Class).ToArray();
             }
             else
             {
-                list = sc.ScoreList.Where(s => s.subject == subject && s.stu_depart == depart && s.stu_class == Class && s.uploader==u.user_account).ToArray();
+                list = sc.ScoreList.Where(s => s.subject == subject && s.stu_class == Class && s.uploader==u.user_account).ToArray();
             }
             List<string> time = new List<string>();
             for (int i = 0; i < list.Length; i++)
@@ -227,11 +257,11 @@ namespace VisualizeGradeSystem.Controllers
             Score[] list;
             if (u.user_kind == "admin")
             {
-                list = sc.ScoreList.Where(s => s.subject == subject && s.stu_depart == depart && s.stu_class == Class).ToArray();
+                list = sc.ScoreList.Where(s => s.subject == subject  && s.stu_class == Class).ToArray();
             }
             else
             {
-                list = sc.ScoreList.Where(s => s.subject == subject && s.stu_depart == depart && s.stu_class == Class && s.uploader==u.user_account).ToArray();
+                list = sc.ScoreList.Where(s => s.subject == subject  && s.stu_class == Class && s.uploader==u.user_account).ToArray();
             }
             List<string> time = new List<string>();
             for (int i = 0; i < list.Length; i++)

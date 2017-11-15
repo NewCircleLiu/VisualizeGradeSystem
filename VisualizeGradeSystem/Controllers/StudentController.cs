@@ -17,6 +17,7 @@ namespace VisualizeGradeSystem.Controllers
         // GET: /Student/
         ScoreContext sc = new ScoreContext();
         KnowledgeContext kc = new KnowledgeContext();
+        UserContext uc = new UserContext();
         public ActionResult Index()
         {
             User u = (User)Session["User"];
@@ -26,6 +27,33 @@ namespace VisualizeGradeSystem.Controllers
                 ViewBag.name = u.user_name;
             }
             return View();
+        }
+        public ActionResult ModifyPassword()
+        {
+            User u = (User)Session["User"];
+            ViewBag.account = u.user_account;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Modify(string old_pass, string new_pass)
+        {
+            User u = (User)Session["User"];
+            ViewBag.account = u.user_account;
+            var exsit = uc.UserList.Where(user => user.user_account == u.user_account && user.user_password == old_pass).ToList();
+            if (exsit == null)
+            {
+                return Content("error");
+            }
+            else
+            {
+                u.user_account = new_pass;
+                uc.UserList.Attach(u);
+                uc.Entry(u).State = System.Data.EntityState.Modified;
+                uc.SaveChanges();
+                FormsAuthentication.SignOut();
+                Session.Clear();
+                return RedirectToAction("", "Student");
+            }
         }
         [UserAuthorize]
         public ActionResult PersonalLinePage()
@@ -222,7 +250,7 @@ namespace VisualizeGradeSystem.Controllers
                 subject = "Access";
             }
             User u = (User)Session["User"];
-            Score[] list = sc.ScoreList.Where(s => s.stu_id.Contains(u.user_account) && s.subject == subject).ToArray();
+            Score[] list = sc.ScoreList.Where(s => s.stu_id == u.user_account && s.subject == subject).ToArray();
             List<double> scoreList = new List<double>();
             for (int i = 0; i < list.Length; i++)
             {
@@ -272,7 +300,7 @@ namespace VisualizeGradeSystem.Controllers
         public JsonResult PersonalLine_X(string subject)
         {
             User u = (User)Session["User"];
-            Score[] list = sc.ScoreList.Where(s => s.stu_id.Contains(u.user_account) && s.subject==subject).ToArray();
+            Score[] list = sc.ScoreList.Where(s => s.stu_id==u.user_account && s.subject==subject).ToArray();
             List<string> x = new List<string>();
             for (int i = 1; i <= list.Length; i++)
             {

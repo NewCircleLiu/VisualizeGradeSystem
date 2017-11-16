@@ -29,6 +29,13 @@
                     <label for="exampleInputEmail1">选择班级</label>
                     <select id="class" name="class">
                     </select>
+                    <label for="exampleInputEmail1">选择学年</label>
+                    <select id="year" name="year">
+                        <option value="20">所有</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                    </select>
                 </div>
             </form>
         </div>
@@ -65,6 +72,7 @@
             ["所有", "金融20151", "金融20152"]
     ];
     var arr_subject = ["Access", "C"];
+    var arr_year = ["所有","2017","2018","2019"];
     //二级知识点
     function init() {
         var knowledge1st = document.getElementById("knowledge1st");
@@ -131,6 +139,7 @@
     var depart = "生态学院";
     var Class = "环境生态15";
     var knowledge = knowledge1st + "-" + knowledge2nd;
+    var year = "20";
     var myChart = echarts.init(document.getElementById("chart"));
     var y = [];
     var x = [];
@@ -175,6 +184,15 @@
             update();
             myChart.setOption(option, true);
         });
+        $("#year").change(function () {
+            year = $("#year").find("option:selected").text();
+            if (year == "所有") {
+                year = "20";
+            }
+            clean();
+            update();
+            myChart.setOption(option, true);
+        });
     });
     function clean() {
         this.option.series = [];
@@ -187,8 +205,8 @@
             for (i = 0; i < arr_subject.length; i++) {
                 x = [];
                 y = [];
-                y = GetY(arr_subject[i], Class, knowledge);
-                x = GetX(arr_subject[i], Class, knowledge);
+                y = GetY(arr_subject[i], Class, knowledge, year);
+                x = GetX(arr_subject[i], Class, knowledge, year);
                 if (typeof (y[0]) == "undefined")//证明没有找到成绩
                 {
                     x = ['无考试成绩'];
@@ -209,9 +227,11 @@
         else if (subject !== "所有" && depart != "所有" && Class != "所有") {
             x = [];
             y = [];
+            
             legend_data = [];
-            y = GetY(subject, Class, knowledge);
-            x = GetX(subject, Class, knowledge);
+            y = GetY(subject, Class, knowledge, year);
+            x = GetX(subject, Class, knowledge, year);
+            
             if (typeof (y[0]) == "undefined")//证明没有找到成绩
             {
                 x = ['无考试成绩'];
@@ -232,8 +252,8 @@
             for (i = 1; i < arr_depart.length; i++) {
                 x = [];
                 y = [];
-                y = GetY(subject, Class, knowledge);
-                x = GetX(subject, Class, knowledge);
+                y = GetY(subject, Class, knowledge, year);
+                x = GetX(subject, Class, knowledge, year);
                 if (typeof (y[0]) == "undefined")//证明没有找到成绩
                 {
                     x = ['无考试成绩'];
@@ -255,8 +275,8 @@
             for (i = 1; i < arr_class[arr_depart.indexOf(depart)].length; i++) {
                 x = [];
                 y = [];
-                y = GetY(subject, arr_class[arr_depart.indexOf(depart)][i], knowledge);
-                x = GetX(subject, arr_class[arr_depart.indexOf(depart)][i], knowledge);
+                y = GetY(subject, arr_class[arr_depart.indexOf(depart)][i], knowledge, year);
+                x = GetX(subject, arr_class[arr_depart.indexOf(depart)][i], knowledge, year);
                 if (typeof (y[0]) == "undefined")//证明没有找到成绩
                 {
                     x = ['无考试成绩'];
@@ -279,8 +299,8 @@
                 for (j = 1; j < arr_depart.length; j++) {
                     x = [];
                     y = [];
-                    y = GetY(arr_subject[i], Class, knowledge);
-                    x = GetX(arr_subject[i], Class, knowledge);
+                    y = GetY(arr_subject[i], Class, knowledge, year);
+                    x = GetX(arr_subject[i], Class, knowledge, year);
                     if (typeof (y[0]) == "undefined")//证明没有找到成绩
                     {
                         x = ['无考试成绩'];
@@ -305,8 +325,8 @@
                 for (j = 1; j < arr_class[arr_depart.indexOf(depart)].length; j++) {
                     x = [];
                     y = [];
-                    y = GetY(arr_subject[i], arr_class[arr_depart.indexOf(depart)][j], knowledge);
-                    x = GetX(arr_subject[i], arr_class[arr_depart.indexOf(depart)][j], knowledge);
+                    y = GetY(arr_subject[i], arr_class[arr_depart.indexOf(depart)][j], knowledge, year);
+                    x = GetX(arr_subject[i], arr_class[arr_depart.indexOf(depart)][j], knowledge, year);
                     if (typeof (y[0]) == "undefined")//证明没有找到成绩
                     {
                         x = ['无考试成绩'];
@@ -331,8 +351,8 @@
                 for (j = 1; j < arr_class[i].length; j++) {
                     x = [];
                     y = [];
-                    y = GetY(subject, arr_class[i][j], knowledge);
-                    x = GetX(subject, arr_class[i][j], knowledge);
+                    y = GetY(subject, arr_class[i][j], knowledge, year);
+                    x = GetX(subject, arr_class[i][j], knowledge, year);
                     if (typeof (y[0]) == "undefined")//证明没有找到成绩
                     {
                         x = ['无考试成绩'];
@@ -358,8 +378,8 @@
                     for (k = 1; k < arr_class[j].length; k++) {
                         x = [];
                         y = [];
-                        y = GetY(arr_subject[i], arr_class[j][k], knowledge);
-                        x = GetX(arr_subject[i], arr_class[j][k], knowledge);
+                        y = GetY(arr_subject[i], arr_class[j][k], knowledge, year);
+                        x = GetX(arr_subject[i], arr_class[j][k], knowledge, year);
                         if (typeof (y[0]) == "undefined")//证明没有找到成绩
                         {
                             x = ['无考试成绩'];
@@ -379,12 +399,12 @@
             option.legend.data = legend_data;
         }
     }
-    function GetY(subject,Class,knowledge) {
+    function GetY(subject, Class, knowledge, year) {
         $.ajax({
             type: "post",
             async: false,
             url: "@Url.Content("~/Teacher/GetKnowledge/")",
-            data: { "subject": subject, "Class":Class ,"knowledge": knowledge },
+            data: { "subject": subject, "Class":Class ,"knowledge": knowledge, "year":year},
             dataType: "json",
             success: function (result) {
                 if (result) {
@@ -398,12 +418,12 @@
 
         return y;
     }
-    function GetX(subject, Class, knowledge) {
+    function GetX(subject, Class, knowledge, year) {
         $.ajax({
             type: "post",
             async: false,
             url: "@Url.Content("~/Teacher/GetKnowledge_X/")",
-            data: { "subject": subject, "Class": Class, "knowledge": knowledge },
+            data: { "subject": subject, "Class": Class, "knowledge": knowledge ,"year":year},
             dataType: "json",
             success: function (result) {
                 x = [];
@@ -417,8 +437,8 @@
 
         return x;
     }
-    y=GetY();
-    x=GetX();
+    y = GetY("Access", "环境生态15", "全知识点-全范围", "20");
+    x = GetX("Access", "环境生态15", "全知识点-全范围", "20");
     var option = {
         title: {
             text: '成绩曲线',

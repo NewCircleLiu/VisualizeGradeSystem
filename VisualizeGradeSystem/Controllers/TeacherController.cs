@@ -47,7 +47,62 @@ namespace VisualizeGradeSystem.Controllers
         {
             User u = (User)Session["User"];
             ViewBag.account = u.user_account;
-            return View();
+            Score[] scoreList = sc.ScoreList.Where(s => s.uploader == u.user_account).ToArray();
+            List<string> time = new List<string>();
+            for (int i = 0; i < scoreList.Length; i++)
+            {
+                if (!time.Contains(scoreList[i].uploadtime))
+                {
+                    time.Add(scoreList[i].uploadtime); //有多少次考试
+                }
+            }
+            return View(time);
+        }
+        [HttpPost]
+        public ActionResult DeleteLog(string time) //把上传的某一次删除
+        {
+            User u = (User)Session["User"];
+            ViewBag.account = u.user_account;
+            Score[] sList = sc.ScoreList.Where(s => s.uploader == u.user_account && s.uploadtime == time).ToArray();
+            Puzzle[] pList = pc.PuzzleList.Where(p => p.uploader == u.user_account && p.uploadtime == time).ToArray();
+            Knowledge[] kList = kc.KnowledgeList.Where(k => k.uploader == u.user_account && k.uploadtime == time).ToArray();
+            for (int i = 0; i < sList.Length; i++)
+            {
+                if (ModelState.IsValid)
+                {
+                    sc.ScoreList.Remove(sList[i]);
+                    sc.SaveChanges();
+                }
+                else
+                {
+                    return Content("error");
+                }
+            }
+            for (int i = 0; i < kList.Length; i++)
+            {
+                if (ModelState.IsValid)
+                {
+                    kc.KnowledgeList.Remove(kList[i]);
+                    kc.SaveChanges();
+                }
+                else
+                {
+                    return Content("error");
+                }
+            }
+            for (int i = 0; i < pList.Length; i++)
+            {
+                if (ModelState.IsValid)
+                {
+                    pc.PuzzleList.Remove(pList[i]);
+                    pc.SaveChanges();
+                }
+                else
+                {
+                    return Content("error");
+                }
+            }
+            return Content("ok");
         }
         public ActionResult ModifyPassword()
         {
@@ -60,20 +115,21 @@ namespace VisualizeGradeSystem.Controllers
         {
             User u = (User)Session["User"];
             ViewBag.account = u.user_account;
-            var exsit = uc.UserList.Where(user => user.user_account == u.user_account && user.user_password == old_pass).ToList();
-            if (exsit == null)
+            User[] exsit = uc.UserList.Where(user => user.user_account == u.user_account && user.user_password == old_pass).ToArray();
+            if (exsit.Length == 0)
             {
-                return Content("旧密码错误，请重新输入");
+                return Content("error");
             }
             else
             {
-                u.user_account = new_pass;
-                uc.UserList.Attach(u);
-                uc.Entry(u).State = System.Data.EntityState.Modified;
+                User temp = exsit[0];
+                temp.user_password = new_pass;
+                uc.UserList.Attach(temp);
+                uc.Entry(temp).State = System.Data.EntityState.Modified;
                 uc.SaveChanges();
                 FormsAuthentication.SignOut();
                 Session.Clear();
-                return RedirectToAction("", "Student");
+                return RedirectToAction("Index", "Student");
             }
         }
         //选择科目页面
@@ -100,18 +156,18 @@ namespace VisualizeGradeSystem.Controllers
             return View();
         }
         [HttpPost]
-        public JsonResult GetKnowledge_X(string subject, string Class, string knowledge)
+        public JsonResult GetKnowledge_X(string subject, string Class, string knowledge, string year)
         {
             User u = (User)Session["User"];
             Knowledge[] kList;
             List<double> scoreList = new List<double>();
             if (u.user_kind == "admin")
             {
-                kList = kc.KnowledgeList.Where(k => k.subject == subject && k.stu_class == Class && k.knowledge_name == knowledge).ToArray();
+                kList = kc.KnowledgeList.Where(k => k.subject == subject && k.stu_class == Class && k.knowledge_name == knowledge && k.uploadtime.StartsWith(year)).ToArray();
             }
             else
             {
-                kList = kc.KnowledgeList.Where(k => k.subject == subject && k.stu_class == Class && k.knowledge_name == knowledge && k.uploader == u.user_account).ToArray();
+                kList = kc.KnowledgeList.Where(k => k.subject == subject && k.stu_class == Class && k.knowledge_name == knowledge && k.uploader == u.user_account && k.uploadtime.StartsWith(year)).ToArray();
             }
             List<string> time = new List<string>();
             for (int i = 0; i < kList.Length; i++)
@@ -133,18 +189,18 @@ namespace VisualizeGradeSystem.Controllers
         }
         [HttpPost]
         //某个班级对于某个知识点掌握的情况
-        public JsonResult GetKnowledge(string subject,string Class,string knowledge)
+        public JsonResult GetKnowledge(string subject,string Class,string knowledge, string year)
         {
             User u = (User)Session["User"];
             Knowledge[] kList;
             List<double> scoreList = new List<double>();
             if (u.user_kind == "admin")
             {
-                kList = kc.KnowledgeList.Where(k => k.subject == subject && k.stu_class == Class && k.knowledge_name==knowledge).ToArray();
+                kList = kc.KnowledgeList.Where(k => k.subject == subject && k.stu_class == Class && k.knowledge_name==knowledge && k.uploadtime.StartsWith(year)).ToArray();
             }
             else
             {
-                kList = kc.KnowledgeList.Where(k => k.subject == subject && k.stu_class == Class && k.knowledge_name == knowledge && k.uploader == u.user_account).ToArray();
+                kList = kc.KnowledgeList.Where(k => k.subject == subject && k.stu_class == Class && k.knowledge_name == knowledge && k.uploader == u.user_account && k.uploadtime.StartsWith(year)).ToArray();
             }
             List<string> time = new List<string>();
             for (int i = 0; i < kList.Length; i++)
@@ -210,17 +266,17 @@ namespace VisualizeGradeSystem.Controllers
         //获得全校成绩：1.如果是admin，那么全校的都可以
         //2.否则，只能看自己上传的
         [HttpPost]
-        public JsonResult GradeSchollChartPage(string subject, string depart, string Class)
+        public JsonResult GradeSchollChartPage(string subject, string depart, string Class, string year)
         {
             User u = (User)Session["User"];
             Score[] list;
             if (u.user_kind == "admin")
             {
-                list = sc.ScoreList.Where(s => s.subject == subject && s.stu_class == Class).ToArray();
+                list = sc.ScoreList.Where(s => s.subject == subject && s.stu_class == Class && s.uploadtime.StartsWith(year)).ToArray();
             }
             else
             {
-                list = sc.ScoreList.Where(s => s.subject == subject && s.stu_class == Class && s.uploader==u.user_account).ToArray();
+                list = sc.ScoreList.Where(s => s.subject == subject && s.stu_class == Class && s.uploader==u.user_account && s.uploadtime.StartsWith(year)).ToArray();
             }
             List<string> time = new List<string>();
             for (int i = 0; i < list.Length; i++)
@@ -251,17 +307,17 @@ namespace VisualizeGradeSystem.Controllers
         }
         //获得全校成绩的x轴：1.如果是admin，那么全校的都可以2.否则，只能看自己上传的
         [HttpPost]
-        public JsonResult GradeSchollChartPaget_X(string subject, string depart, string Class)
+        public JsonResult GradeSchollChartPaget_X(string subject, string depart, string Class, string year)
         {
             User u = (User)Session["User"];
             Score[] list;
             if (u.user_kind == "admin")
             {
-                list = sc.ScoreList.Where(s => s.subject == subject  && s.stu_class == Class).ToArray();
+                list = sc.ScoreList.Where(s => s.subject == subject  && s.stu_class == Class && s.uploadtime.StartsWith(year)).ToArray();
             }
             else
             {
-                list = sc.ScoreList.Where(s => s.subject == subject  && s.stu_class == Class && s.uploader==u.user_account).ToArray();
+                list = sc.ScoreList.Where(s => s.subject == subject  && s.stu_class == Class && s.uploader==u.user_account && s.uploadtime.StartsWith(year)).ToArray();
             }
             List<string> time = new List<string>();
             for (int i = 0; i < list.Length; i++)

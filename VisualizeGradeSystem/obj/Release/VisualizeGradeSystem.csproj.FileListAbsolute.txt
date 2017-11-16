@@ -34,3 +34,4 @@ C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\Visuali
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\zh-Hans\System.Web.WebPages.Razor.resources.dll
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\obj\Release\VisualizeGradeSystem.dll
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\obj\Release\VisualizeGradeSystem.pdb
+C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\obj\Release\VisualizeGradeSystem.csprojResolveAssemblyReference.cache

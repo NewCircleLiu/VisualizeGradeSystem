@@ -177,7 +177,7 @@
         max_score = new CountUp("max_score", 0, max, 0, 2.5);
         min_score = new CountUp("min_score", 0, min, 0, 2.5);
         avg_score = new CountUp("avg_score", 0, avg, 0, 2.5);
-        if (user_score > avg) {
+        if (eval(user_score) > eval(avg)) {
             avg = parseFloat(avg);
             avg = avg.toFixed(2);
             avg_relation.innerHTML = "真棒，你已经高于平均分" + eval(user_score - avg).toFixed(2) + "分了";
@@ -283,6 +283,7 @@
                 dataType: "json",
                 success: function (result) {
                     if (result) {
+                        
                         total = result[0];
                         user_score = result[1];
                         h_5 = result[2];
@@ -304,11 +305,13 @@
             max_score = new CountUp("max_score", 0, max, 0, 2.5);
             min_score = new CountUp("min_score", 0, min, 0, 2.5);
             avg_score = new CountUp("avg_score", 0, avg, 0, 2.5);
-            if (user_score > avg) {
-                avg_relation.innerHTML = "真棒，你已经高于平均分" + eval(user_score - avg) + "分了";
+            if (eval(user_score) > eval(avg)) {
+                avg_relation.innerHTML = "真棒，你已经高于平均分" + eval(user_score - avg).toFixed(2) + "分了";
             }
             else {
-                avg_relation.innerHTML = "加油，还差" + eval(avg - user_score) + "分就可以赶上平均分啦";
+                alert(user_score);
+                alert(avg);
+                avg_relation.innerHTML = "加油，还差" + eval(avg - user_score).toFixed(2) + "分就可以赶上平均分啦";
             }
             max_class.innerHTML = "ta来自" + max_c;
             min_class.innerHTML = "ta来自" + min_c;

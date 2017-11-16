@@ -39,20 +39,21 @@ namespace VisualizeGradeSystem.Controllers
         {
             User u = (User)Session["User"];
             ViewBag.account = u.user_account;
-            var exsit = uc.UserList.Where(user => user.user_account == u.user_account && user.user_password == old_pass).ToList();
-            if (exsit == null)
+            User[] exsit = uc.UserList.Where(user => user.user_account == u.user_account && user.user_password == old_pass).ToArray();
+            if (exsit.Length == 0)
             {
                 return Content("error");
             }
             else
             {
-                u.user_account = new_pass;
-                uc.UserList.Attach(u);
-                uc.Entry(u).State = System.Data.EntityState.Modified;
+                User temp = exsit[0];
+                temp.user_password = new_pass;
+                uc.UserList.Attach(temp);
+                uc.Entry(temp).State = System.Data.EntityState.Modified;
                 uc.SaveChanges();
                 FormsAuthentication.SignOut();
                 Session.Clear();
-                return RedirectToAction("", "Student");
+                return RedirectToAction("Index", "Student");
             }
         }
         [UserAuthorize]
@@ -104,7 +105,7 @@ namespace VisualizeGradeSystem.Controllers
             double avg = 0.0;
             for (int i = 0; i < list.Length; i++)
             {
-                if (!times.Contains(list[i].uploadtime))
+                if (!times.Contains(list[i].uploadtime) && list[i].stu_id==u.user_account)
                 {
                     times.Add(list[i].uploadtime); //有多少次考试
                 }

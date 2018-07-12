@@ -24,7 +24,13 @@
                     <label for="exampleInputEmail1">选择班级</label>
                     <select id="class" name="class">
                     </select>
-
+                    <label for="exampleInputEmail1">选择学年</label>
+                    <select id="year" name="year">
+                        <option value="20">所有</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                    </select>
                 </div>
             </form>
         </div>
@@ -89,6 +95,8 @@
     var subject = "Access";
     var depart = "生态学院";
     var Class = "环境生态15";
+    var year = "20";
+
     var myChart = echarts.init(document.getElementById("chart"));
     var y = [];
     var x = [];
@@ -120,10 +128,22 @@
             update();
             myChart.setOption(option, true);
         });
+        $("#year").change(function () {
+            year = $("#year").find("option:selected").text();
+            if (year == "所有")
+            {
+                year = "20";
+            }
+            clean();
+            myChart = echarts.init(document.getElementById("chart"));
+            update();
+            myChart.setOption(option, true);
+        });
     });
     function clean() {
         this.option.series = [];
         this.option.legend.data = [];
+        this.option.xAxis[0].data = [];
         size=0;
     }
     function update() {
@@ -131,8 +151,8 @@
         y = [];
         if (subject == "所有" && depart != "所有" && Class != "所有") {
             for (i = 0; i < arr_subject.length; i++) {
-                y = GetY(arr_subject[i], depart, Class);
-                x = GetX(arr_subject[i], depart, Class);
+                y = GetY(arr_subject[i], depart, Class, year);
+                x = GetX(arr_subject[i], depart, Class, year);
                 if (typeof (y[0]) == "undefined")//证明没有找到成绩
                 {
                     x = ['无考试成绩'];
@@ -145,13 +165,16 @@
                         data: y
                     }
                 );
-                this.option.legend.data.push(arr_subject[i] +"-" + Class);
-                this.option.xAxis[0].data = x;
+                this.option.legend.data.push(arr_subject[i] + "-" + Class);
+                if (this.option.xAxis[0].data.length < x.length) {
+                    this.option.xAxis[0].data = x;
+                }
             }
         }
         else if (subject !== "所有" && depart != "所有" && Class != "所有") {
-            y = GetY(subject, depart, Class);
-            x = GetX(subject, depart, Class);
+            
+            y = GetY(subject, depart, Class, year);
+            x = GetX(subject, depart, Class, year);
             if (typeof (y[0]) == "undefined")//证明没有找到成绩
             {
                 x = ['无考试成绩'];
@@ -163,13 +186,15 @@
                     type: 'line',
                     data: y
                 };
-            this.option.xAxis[0].data = x;
+            if (this.option.xAxis[0].data.length < x.length) {
+                this.option.xAxis[0].data = x;
+            }
             this.option.legend.data.push(subject + "-" + depart + "-" + Class);
         }
         else if (subject != "所有" && depart == "所有" && Class != "所有") {
             for (i = 1; i < arr_depart.length; i++) {
-                y = GetY(subject, arr_depart[i], Class);
-                x = GetX(subject, arr_depart[i], Class);
+                y = GetY(subject, arr_depart[i], Class, year);
+                x = GetX(subject, arr_depart[i], Class, year);
                 if (typeof (y[0]) == "undefined")//证明没有找到成绩
                 {
                     x = ['无考试成绩'];
@@ -182,13 +207,15 @@
                         data: y
                     });
                 this.option.legend.data.push(subject + "-" + Class);
-                this.option.xAxis[0].data = x;
+                if (this.option.xAxis[0].data.length < x.length) {
+                    this.option.xAxis[0].data = x;
+                }
             }
         }
         else if (subject != "所有" && depart != "所有" && Class == "所有") {
             for (i = 1; i < arr_class[arr_depart.indexOf(depart)].length; i++) {
-                y = GetY(subject, depart, arr_class[arr_depart.indexOf(depart)][i]);
-                x = GetX(subject, depart, arr_class[arr_depart.indexOf(depart)][i]);
+                y = GetY(subject, depart, arr_class[arr_depart.indexOf(depart)][i], year);
+                x = GetX(subject, depart, arr_class[arr_depart.indexOf(depart)][i], year);
                 if (typeof (y[0]) == "undefined")//证明没有找到成绩
                 {
                     x = ['无考试成绩'];
@@ -201,14 +228,16 @@
                         data: y
                     });
                 this.option.legend.data.push(subject + "-" + arr_class[arr_depart.indexOf(depart)][i]);
-                this.option.xAxis[0].data = x;
+                if (this.option.xAxis[0].data.length < x.length) {
+                    this.option.xAxis[0].data = x;
+                }
             }
         }
         else if (subject == "所有" && depart == "所有" && Class != "所有") {
             for (i = 0; i < arr_subject.length; i++) {
                 for (j = 1; j < arr_depart.length; j++) {
-                    y = GetY(arr_subject[i], arr_depart[j], Class);
-                    x = GetX(arr_subject[i], arr_depart[i], Class);
+                    y = GetY(arr_subject[i], arr_depart[j], Class, year);
+                    x = GetX(arr_subject[i], arr_depart[i], Class, year);
                     if (typeof (y[0]) == "undefined")//证明没有找到成绩
                     {
                         x = ['无考试成绩'];
@@ -221,7 +250,9 @@
                             data: y
                         });
                     this.option.legend.data.push(arr_subject[i] + "-" + Class);
-                    this.option.xAxis[0].data = x;
+                    if (this.option.xAxis[0].data.length < x.length) {
+                        this.option.xAxis[0].data = x;
+                    }
                 }
             }
         }
@@ -229,8 +260,8 @@
             size = 0;
             for (i = 0; i < arr_subject.length; i++) {
                 for (j = 1; j < arr_class[arr_depart.indexOf(depart)].length; j++) {
-                    y = GetY(arr_subject[i], depart, arr_class[arr_depart.indexOf(depart)][j]);
-                    x = GetX(arr_subject[i], depart, arr_class[arr_depart.indexOf(depart)][j]);
+                    y = GetY(arr_subject[i], depart, arr_class[arr_depart.indexOf(depart)][j], year);
+                    x = GetX(arr_subject[i], depart, arr_class[arr_depart.indexOf(depart)][j], year);
                     if (typeof (y[0]) == "undefined")//证明没有找到成绩
                     {
                         x = ['无考试成绩'];
@@ -243,7 +274,9 @@
                             data: y
                         });
                     this.option.legend.data.push(arr_subject[i] + "-" + arr_class[arr_depart.indexOf(depart)][j]);
-                    this.option.xAxis[0].data = x;
+                    if (this.option.xAxis[0].data.length < x.length) {
+                        this.option.xAxis[0].data = x;
+                    }
                 }
             }
         }
@@ -251,8 +284,8 @@
             size = 0;
             for (i = 1; i < arr_depart.length; i++) {
                 for (j = 1; j < arr_class[i].length; j++) {
-                    y = GetY(subject, arr_depart[i], arr_class[i][j]);
-                    x = GetX(subject, arr_depart[i], arr_class[i][j]);
+                    y = GetY(subject, arr_depart[i], arr_class[i][j], year);
+                    x = GetX(subject, arr_depart[i], arr_class[i][j], year);
                     if (typeof (y[0]) == "undefined")//证明没有找到成绩
                     {
                         x = ['无考试成绩'];
@@ -265,7 +298,9 @@
                             data: y
                         });
                     this.option.legend.data.push(subject + "-" + arr_class[i][j]);
-                    this.option.xAxis[0].data = x;
+                    if (this.option.xAxis[0].data.length < x.length) {
+                        this.option.xAxis[0].data = x;
+                    }
                 }
             }
         }
@@ -274,8 +309,8 @@
             for (i = 0; i < arr_subject.length; i++) {
                 for (j = 1; j < arr_depart.length; j++) {
                     for (k = 1; k < arr_class[j].length; k++) {
-                        y = GetY(arr_subject[i], arr_depart[j], arr_class[j][k]);
-                        x = GetX(arr_subject[i], arr_depart[j], arr_class[j][k]);
+                        y = GetY(arr_subject[i], arr_depart[j], arr_class[j][k], year);
+                        x = GetX(arr_subject[i], arr_depart[j], arr_class[j][k], year);
                         if (typeof (y[0]) == "undefined")//证明没有找到成绩
                         {
                             x = ['无考试成绩'];
@@ -287,19 +322,21 @@
                                 type: 'line',
                                 data: y
                             });
-                        option.xAxis[0].data = x;
+                        if (this.option.xAxis[0].data.length < x.length) {
+                            this.option.xAxis[0].data = x;
+                        }
                         this.option.legend.data.push(arr_subject[i] + "-" + arr_class[j][k]);
                     }
                 }
             }
         }
     }
-    function GetY(s, d, c) {
+    function GetY(s, d, c, y) {
         $.ajax({
             type: "post",
             async: false,
             url: "@Url.Content("~/Teacher/GradeSchollChartPage/")",
-            data: { "subject": s, "depart": d, "class": c },
+            data: { "subject": s, "depart": d, "class": c, "year":y},
             dataType: "json",
             success: function (result) {
                 y = [];
@@ -313,12 +350,12 @@
 
         return y;
     }
-    function GetX(s, d, c) {
+    function GetX(s, d, c, y) {
         $.ajax({
             type: "post",
             async: false,
             url: "@Url.Content("~/Teacher/GradeSchollChartPaget_X/")",
-            data: { "subject": s, "depart": d, "class": c },
+            data: { "subject": s, "depart": d, "class": c, "year":y},
             dataType: "json",
             success: function (result) {
                 x = [];
@@ -333,8 +370,8 @@
         return x;
     }
 
-    x = GetX("Access", "生态学院", "环境生态15");
-    y = GetY("Access", "生态学院", "环境生态15");
+    x = GetX("Access", "生态学院", "环境生态15", "20");
+    y = GetY("Access", "生态学院", "环境生态15", "20");
 
     var option = {
         title: {

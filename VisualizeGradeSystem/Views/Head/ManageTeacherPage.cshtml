@@ -1,0 +1,146 @@
+﻿@{
+    ViewBag.Title = "管理员首页";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("HomePartialView_4")
+@using VisualizeGradeSystem.Models.User
+
+@model  IEnumerable<User>
+@{
+    IEnumerable<User> userList = from items in Model select items;
+    User[] users = userList.ToArray();   
+}
+<link href="~/Resources/css/index.css" rel="stylesheet" />
+<link href="~/Resources/css/main.css" rel="stylesheet" type="text/css">
+<link href="~/Resources/css/themify-icons.css" rel="stylesheet" />
+
+<div class="container" style="margin: 100px">
+    <div class="row clearfix">
+        <div class="col-md-2 column">
+        </div>
+        <div class="col-md-8 column">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="text-align: center">编号</th>
+                        <th style="text-align: center">姓名</th>
+                        <th style="text-align: center">所属院系</th>
+                        <th style="text-align: center">所教授班级</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < users.Length; i++)
+                    {
+                        if (i % 2 == 0)
+                        {
+                        <tr class="success">
+                            <td>@(i + 1)</td>
+                            <td>@users[i].user_name</td>
+                            <td>@users[i].user_depart</td>
+                            <td >@users[i].user_class<a data-toggle="modal" data-target="#@users[i].user_account" style="font-size:smaller;cursor:pointer">[编辑]</a></td>
+                        </tr>
+                        }
+                        else if (i % 3 == 0)
+                        {
+                        <tr class="error">
+                            <td>@(i + 1)</td>
+                            <td>@users[i].user_name</td>
+                            <td>@users[i].user_depart</td>
+                            <td>@users[i].user_class<a data-toggle="modal" data-target="#@users[i].user_account" style="font-size:smaller;cursor:pointer">[编辑]</a></td>
+                        </tr>
+                        }
+                        else
+                        {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@users[i].user_name</td>
+                            <td>@users[i].user_depart</td>
+                            <td>@users[i].user_class<a data-toggle="modal" data-target="#@users[i].user_account" style="font-size:smaller;cursor:pointer">[编辑]</a></td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            @for (int i = 0; i < users.Length; i++)
+            {
+                <div class="modal fade" id="@users[i].user_account" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="@Url.Content("~/Head/EditClass/")" method="post" enctype="multipart/form-data">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">编辑教授班级
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input type="hidden" name="id" value="@users[i].user_id" />
+                                        <label for="exampleInputEmail1">编辑班级使，请以","分开</label>
+                                        <input type="text" name="newClass" value="@users[i].user_class"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="修改" />
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal -->
+                </div> 
+            }
+        </div>
+        <div class="col-md-2 column">
+        </div>
+    </div>
+</div>
+<script>
+    function editClass(id) {
+        location.href = "/Admin/EditClassPage?id=" + id;
+    }
+    function deleteHead(id) {
+        if (confirm("是否取消该教师的课题组长？")) {
+            jQuery.post(
+            "/Admin/CancelHead/",
+                {
+                    "id": id,
+                },
+                function (data) {
+                    if (data == "error") {
+                        jQuery("#error_info").text("删除失败");
+                    } else {
+                        location.href = "/Admin/ManageTeacherPage/";
+                    }
+                }
+            );
+        }
+
+    }
+    function setHead(id) {
+        if (confirm("是否设该教师为课题组长？")) {
+            jQuery.post(
+            "/Admin/SetHead/",
+                {
+                    "id": id,
+                },
+                function (data) {
+                    if (data == "error") {
+                        jQuery("#error_info").text("删除失败");
+                    } else {
+                        location.href = "/Admin/ManageTeacherPage/";
+                    }
+                }
+            );
+        }
+    }
+</script>
+<style>
+    tr {
+        text-align: center;
+        height: 50px;
+        font-size: larger;
+    }
+</style>

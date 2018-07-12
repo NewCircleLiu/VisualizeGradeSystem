@@ -3,10 +3,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@Html.Partial("HomePartialView_2")
+@Html.Partial("HomePartialView_4")
 
 
-<div class="container" style="margin-top: 100px; margin-bottom: 100px;text-align:center">
+<div class="container" style="margin-top: 100px; margin-bottom: 100px;text-align:left">
     <div class="row clearfix">
         <div class="col-md-4 column" style="width: 100%;height:auto">
             <h3>选择</h3>
@@ -58,7 +58,7 @@
             ["报表"],
     ];
     var arr_depart = ["所有", "生态学院", "农牧学院草科系", "农牧学院农林系", "农牧学院动医系", "农牧学院动科系", "财经学院会财系", "财经学院工管系", "财经学院旅管系", "财经学院管科系", "财经学院财金系"];
-    var arr_class = [
+/*    var arr_class = [
             ["所有"],
             ["所有", "生技20151", "生技20152", "生技20153", "生物工程15", "环境生态15", "环科2015"],
             ["所有", "草科2015"],
@@ -70,11 +70,32 @@
             ["所有", "旅管2015", "行政2015"],
             ["所有", "信管2015"],
             ["所有", "金融20151", "金融20152"]
-    ];
+    ];*/
+    var arr_class = [];
     var arr_subject = ["Access", "C"];
     var arr_year = ["所有","2017","2018","2019"];
     //二级知识点
     function init() {
+        for (var i = 0; i < arr_depart.length; i++)//依次获取当前院系下的班级
+        {
+            var temp = []
+            temp.push("所有");
+            $.ajax({
+                type: "post",
+                async: false,
+                url: "@Url.Content("~/ShowTable/GetClassInDepart/")",
+                data: { "depart": arr_depart[i] },
+                dataType: "json",
+                success: function (result) {
+                    if (result) {
+                        for (var j = 0; j < result.length; j++) {
+                            temp.push(result[j]);
+                        }
+                        arr_class.push(temp);
+                    }
+                }
+            });
+        }
         var knowledge1st = document.getElementById("knowledge1st");
         knowledge1st.style.width = 150 + "px";
         var knowledge2nd = document.getElementById("knowledge2nd");
@@ -196,7 +217,7 @@
     });
     function clean() {
         this.option.series = [];
-
+        this.option.xAxis[0].data = [];
         size = 0;
     }
     function update() {
@@ -220,7 +241,9 @@
                     }
                 );
                 legend_data.push(subject + "-" + Class);
-                this.option.xAxis[0].data = x;
+                if (this.option.xAxis[0].data.length < x.length) {
+                    this.option.xAxis[0].data = x;
+                }
             }
             option.legend.data = legend_data;
         }
@@ -266,7 +289,9 @@
                         data: y
                     });
                 legend_data.push(subject + "-" + Class);
-                this.option.xAxis[0].data = x;
+                if (this.option.xAxis[0].data.length < x.length) {
+                    this.option.xAxis[0].data = x;
+                }
             }
             option.legend.data = legend_data;
         }
@@ -289,7 +314,9 @@
                         data: y
                     });
                 legend_data.push(subject + "-" + arr_class[arr_depart.indexOf(depart)][i]);
-                this.option.xAxis[0].data = x;
+                if (this.option.xAxis[0].data.length < x.length) {
+                    this.option.xAxis[0].data = x;
+                }
             }
             option.legend.data = legend_data;
         }
@@ -313,7 +340,9 @@
                             data: y
                         });
                     legend_data.push(arr_subject[i] + "-" + Class);
-                    this.option.xAxis[0].data = x;
+                    if (this.option.xAxis[0].data.length < x.length) {
+                        this.option.xAxis[0].data = x;
+                    }
                 }
             }
             option.legend.data = legend_data;
@@ -339,7 +368,9 @@
                             data: y
                         });
                     legend_data.push(arr_subject[i] + "-" + arr_class[arr_depart.indexOf(depart)][j]);
-                    this.option.xAxis[0].data = x;
+                    if (this.option.xAxis[0].data.length < x.length) {
+                        this.option.xAxis[0].data = x;
+                    }
                 }
             }
             option.legend.data = legend_data;
@@ -365,7 +396,9 @@
                             data: y
                         });
                     legend_data.push(subject + "-" + arr_class[i][j]);
-                    this.option.xAxis[0].data = x;
+                    if (this.option.xAxis[0].data.length < x.length) {
+                        this.option.xAxis[0].data = x;
+                    }
                 }
             }
             option.legend.data = legend_data;
@@ -391,7 +424,9 @@
                                 type: 'line',
                                 data: y
                             });
-                        option.xAxis[0].data = x;
+                        if (this.option.xAxis[0].data.length < x.length) {
+                            this.option.xAxis[0].data = x;
+                        }
                         legend_data.push(arr_subject[i] + "-" + arr_class[j][k]);
                     }
                 }
@@ -403,7 +438,7 @@
         $.ajax({
             type: "post",
             async: false,
-            url: "@Url.Content("~/Teacher/GetKnowledge/")",
+            url: "@Url.Content("~/ShowTable/GetKnowledge/")",
             data: { "subject": subject, "Class":Class ,"knowledge": knowledge, "year":year},
             dataType: "json",
             success: function (result) {
@@ -422,7 +457,7 @@
         $.ajax({
             type: "post",
             async: false,
-            url: "@Url.Content("~/Teacher/GetKnowledge_X/")",
+            url: "@Url.Content("~/ShowTable/GetKnowledge_X/")",
             data: { "subject": subject, "Class": Class, "knowledge": knowledge ,"year":year},
             dataType: "json",
             success: function (result) {

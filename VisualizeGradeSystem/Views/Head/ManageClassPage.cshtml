@@ -1,0 +1,121 @@
+﻿@{
+    ViewBag.Title = "管理当前学期班级";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("HomePartialView_3")
+@using VisualizeGradeSystem.Models.Class
+
+@model  IEnumerable<Class>
+@{
+    IEnumerable<Class> cList = from items in Model select items;
+    Class[] classes = cList.ToArray();   
+}
+<div class="container" style="margin: 100px">
+    <div class="row clearfix">
+        <div class="col-md-2 column">
+        </div>
+        <div class="col-md-8 column">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="text-align: center">编号</th>
+                        <th style="text-align: center">班级名</th>
+                        <th style="text-align: center">所属院系</th>
+                        <th style="text-align: center">删除</th>
+                        <th style="text-align: center">编辑</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < classes.Length; i++)
+                    {
+                        if (i % 2 == 0)
+                        {
+                        <tr class="success">
+                            <td>@(i + 1)</td>
+                            <td>@classes[i].class_name</td>
+                            <td>@classes[i].class_depart</td>
+                            <td><a onclick="deleteClass(@classes[i].class_id)">删除</a></td>
+                            <td><a data-toggle="modal" data-target="#@classes[i].class_id" style="font-size:smaller;cursor:pointer">[编辑]</a></td>
+                        </tr>
+                        }
+                        else if (i % 3 == 0)
+                        {
+                        <tr class="error">
+                            <td>@(i + 1)</td>
+                            <td>@classes[i].class_name</td>
+                            <td>@classes[i].class_depart</td>
+                            <td><a onclick="deleteClass(@classes[i].class_id)">删除</a></td>
+                            <td><a data-toggle="modal" data-target="#@classes[i].class_id" style="font-size:smaller;cursor:pointer">[编辑]</a></td>
+                        </tr>
+                        }
+                        else
+                        {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@classes[i].class_name</td>
+                            <td>@classes[i].class_depart</td>
+                            <td><a onclick="deleteClass(@classes[i].class_id)">删除</a></td>
+                            <td><a data-toggle="modal" data-target="#@classes[i].class_id" style="font-size:smaller;cursor:pointer">[编辑]</a></td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            @for (int j = 0; j < classes.Length; j++)
+            {
+                <div class="modal fade" id="@classes[j].class_id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="@Url.Content("~/Head/EditClass/")" method="post" enctype="multipart/form-data">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">编辑资料
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input type="hidden" name="id" value="@classes[j].class_id" />
+                                        <label for="exampleInputEmail1">班级名</label>
+                                        <input type="text" name="newName" value="@classes[j].class_name"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">所属院系</label>
+                                        <input type="text" name="newDepart" value="@classes[j].class_depart"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="修改" />
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal -->
+                </div> 
+            }
+        </div>
+    </div>
+</div>
+<script>
+    function deleteClass(id) {
+        if (confirm("是否删除这个班级？")) {
+            jQuery.post(
+            "/Head/DeleteClass/",
+                {
+                    "id": id,
+                },
+            function (data) {
+                if (data == "error") {
+                    jQuery("#error_info").text("删除失败");
+                } else {
+                    location.href = "/Head/ManageClassPage";
+                }
+            }
+            );
+        }
+    }
+    }
+</script>

@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@Html.Partial("HomePartialView_2")
+@Html.Partial("HomePartialView_3")
 @model  IEnumerable<string>
 @{
     IEnumerable<string> uploadlogList = from items in Model select items;
@@ -25,7 +25,7 @@
         <div class="col-md-8 column">
             <h3>上传成绩表格
             </h3>
-            <form action="@Url.Content("~/Teacher/UploadFiles")" method="post" enctype="multipart/form-data">
+            <form action="@Url.Content("~/Head/UploadFiles")" method="post" enctype="multipart/form-data">
                 <p id="error" style="color: red; text-align: center">@Request.Params["errorMsg"]</p>
                 <div class="form-group">
                     <label for="exampleInputEmail1">选择文件</label>
@@ -40,8 +40,10 @@
                 <thead>
                     <tr>
                         <th style="text-align:center">编号</th>
-                        <th style="text-align:center">上传时间</th>
-                        <th style="text-align:center">操作</th>
+                        <th style="text-align:center">考试次数</th>
+                        <th style="text-align:center">非空位删除</th>
+                        <th style="text-align:center">空位删除</th>
+                        <th style="text-align:center">编辑知识点</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,6 +53,8 @@
                             <td>@i</td>
                             <td>@log[i - 1]</td>
                             <td><a id="delete" onclick="deleteLog('@log[i - 1]');" style="cursor:pointer">删除</a></td>
+                            <td><a id="delete_" onclick="deleteLog_('@log[i - 1]');" style="cursor:pointer">删除</a></td>
+                            <td><a id="chooseknowledge" href="~/Head/ChooseKnowledgePage?time=@log[i - 1]" style="cursor:pointer">重新选择知识点</a></td>
                         </tr> 
                     }
                 </tbody>
@@ -124,10 +128,10 @@
             );
     });
     function deleteLog(uploadTime) {
-        alert(uploadTime);
+        //alert(uploadTime);
         if (confirm("是否确定删除本次上传记录？")) {      
             jQuery.post(
-            "/Teacher/DeleteLog/",
+            "/Head/DeleteLog_withoutspace/",
                 {
                     "time": uploadTime,
                 },
@@ -135,11 +139,29 @@
                     if (data == "error") {
                         jQuery("#error_info").text("删除失败");
                     } else {
-                        location.href = "/Teacher/UploadFilesPage/";
+                        location.href = "/Head/UploadFilesPage/";
                     }
                 }
             );
         }
-}
+    }
+    function deleteLog_(uploadTime)
+    {
+        if (confirm("是否确定删除本次上传记录,并空位")) {
+            jQuery.post(
+            "/Head/DeleteLog/",
+                {
+                    "time": uploadTime,
+                },
+                function (data) {
+                    if (data == "error") {
+                        jQuery("#error_info").text("删除失败");
+                    } else {
+                        location.href = "/Head/UploadFilesPage/";
+                    }
+                }
+            );
+        }
+    }
 </script>
 

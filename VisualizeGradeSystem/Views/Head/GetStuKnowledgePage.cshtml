@@ -1,0 +1,253 @@
+﻿@{
+    ViewBag.Title = "课题组组长-某学生知识点曲线";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("HomePartialView_3")
+<link href="~/Resources/css/index.css" rel="stylesheet" />
+<link href="~/Resources/css/main.css" rel="stylesheet" type="text/css">
+<link href="~/Resources/css/themify-icons.css" rel="stylesheet" />
+<div class="container" style="margin-top: 100px; margin-bottom: 100px;text-align:center">
+    <div class="row clearfix">
+        <div class="col-md-4 column" style="width:100%">
+            <h3>选择</h3>
+            <form action="#" method="post" enctype="multipart/form-data">
+                <p id="error" style="color: red; text-align: center">&nbsp;</p>
+                <div class="form-group" style="text-align:center">
+                    <label for="exampleInputEmail1">选择知识点</label>
+                    <select id="knowledge1st" name="knowledge1st" onchange="select_change(this.selectedIndex)">
+                    </select>
+                    <select id="knowledge2nd" name="knowledge2nd">
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-8 column" id="chart" style="width:100%;height:400px">
+        </div>
+    </div>
+</div>
+<script src="~/Resources/js/utility/echarts.common.min.js"></script>
+<script type="text/javascript">
+    function getQueryVariable(variable) { //获得get参数
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) { return pair[1]; }
+        }
+        return (false);
+    }
+</script>
+<script type="text/javascript">
+    var arr_1st = ["全知识点", "数据库基础知识", "Access概述", "表与关系", "查询", "窗体", "报表"];
+    //一级知识点
+    var arr_2nd = [
+            ["全范围"],
+            ["数据库概述"],
+            ["数据库基本操作"],
+            ["全范围", "创建表", "字段属性设置", "表操作"],
+            ["全范围", "查询1", "查询2"],
+            ["窗体"],
+            ["报表"],
+    ];
+    //二级知识点
+    function init() {
+        var knowledge1st = document.getElementById("knowledge1st");
+        knowledge1st.style.width = 150 + "px";
+        var knowledge2nd = document.getElementById("knowledge2nd");
+        knowledge2nd.style.width = 150 + "px";
+        //给下拉框赋值高度，才能在其里面写入内容
+        knowledge1st.length = arr_1st.length;
+        for (var i = 0; i < arr_1st.length; i++) {
+            knowledge1st.options[i].text = arr_1st[i];
+            knowledge1st.options[i].value = arr_1st[i];
+        }
+        //设置默认被选中的选项
+        var index = 1;
+        knowledge1st.selectedIndex = index;
+        //给knowledge2nd赋值高度，才能在其里面写入内容
+        knowledge2nd.length = arr_2nd[index].length;
+        for (var j = 0; j < arr_2nd[index].length; j++) {
+            knowledge2nd.options[j].text = arr_2nd[index][j];
+            knowledge2nd.options[j].value = arr_2nd[index][j];
+        }
+
+    }
+    function select_change(num) {
+        var knowledge2nd = document.getElementById("knowledge2nd");
+        knowledge2nd.length = 0;
+        knowledge2nd.length = arr_2nd[num].length;
+        for (var i = 0; i < arr_2nd[num].length; i++) {
+            knowledge2nd.options[i].text = arr_2nd[num][i];
+            knowledge2nd.options[i].value = arr_2nd[num][i];
+        }
+    }
+    init();
+</script>
+<script>
+    var subject = getQueryVariable("subject");
+    var stu_id = getQueryVariable("stu_id");
+
+    var knowledge1st = "全知识点";
+    var knowledge2nd = "全范围";
+    var knowledge = knowledge1st + "-" + knowledge2nd;
+    var myChart = echarts.init(document.getElementById("chart"));
+    var y = [];
+    var x = [];
+
+    $(document).ready(function () {
+        $("#subject").change(function () {
+            subject = $("#subject").find("option:selected").text();
+            x = [];
+            y = [];
+            y = GetY();
+            x = GetX();
+            if (typeof (y[0]) == "undefined")//证明没有找到成绩
+            {
+                x = ['无考试成绩'];
+                y = [0];
+            }
+            option.series[0].data = y;
+            option.xAxis[0].data = x;
+            myChart.setOption(option, true);
+        });
+        $("#knowledge1st").change(function () {
+            knowledge1st = $("#knowledge1st").find("option:selected").text();
+            knowledge2nd = arr_2nd[arr_1st.indexOf(knowledge1st)][0];
+            knowledge = knowledge1st + "-" + knowledge2nd;
+            x = [];
+            y = [];
+            y = GetY();
+            x = GetX();
+            if (typeof (y[0]) == "undefined")//证明没有找到成绩
+            {
+                x = ['无考试成绩'];
+                y = [0];
+            }
+            option.series[0].data = y;
+            option.xAxis[0].data = x;
+            option.legend.data[0] = subject + "-" + knowledge1st + "-" + knowledge2nd;
+            myChart.setOption(option, true);
+        });
+        $("#knowledge2nd").change(function () {
+            knowledge2nd = $("#knowledge2nd").find("option:selected").text();
+            knowledge = knowledge1st + "-" + knowledge2nd;
+            x = [];
+            y = [];
+            y = GetY();
+            x = GetX();
+            if (typeof (y[0]) == "undefined")//证明没有找到成绩
+            {
+                x = ['无考试成绩'];
+                y = [0];
+            }
+            option.series[0].data = y;
+            option.xAxis[0].data = x;
+            option.legend.data[0] = subject + "-" + knowledge1st + "-" + knowledge2nd;
+            myChart.setOption(option, true);
+        });
+    });
+    function GetY() {
+        $.ajax({
+            type: "post",
+            async: false,
+            url: "@Url.Content("~/ShowTable/GetStuKnowledge/")",
+            data: { "stu_id": stu_id, "subject": subject, "knowledge": knowledge },
+            dataType: "json",
+            success: function (result) {
+                if (result) {
+                    for (var i = 0; i < result.length; i++) {
+                        y.push(result[i]);
+                    }
+                }
+            }
+        })
+
+        return y;
+    }
+    function GetX() {
+        $.ajax({
+            type: "post",
+            async: false,
+            url: "@Url.Content("~/ShowTable/GetStuKnowledge_X/")",
+            data: { "stu_id":stu_id, "subject": subject, "knowledge": knowledge },
+            dataType: "json",
+            success: function (result) {
+                x = [];
+                if (result) {
+                    for (var i = 0; i < result.length; i++) {
+                        x.push(result[i]);
+                    }
+                }
+            }
+        })
+
+        return x;
+    }
+    y=GetY();
+    x=GetX();
+    var option = {
+        title: {
+            text: '知识点曲线',
+            subtext: stu_id
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: []
+        },
+        //右上角工具条
+        toolbox: {
+            show: true,
+            feature: {
+                mark: { show: true },
+                dataView: { show: true, readOnly: false },
+                magicType: { show: true, type: ['line', 'bar'] },
+                restore: { show: true },
+                saveAsImage: { show: true }
+            }
+        },
+        calculable: true,
+        xAxis: [
+            {
+                type: 'category',
+                boundaryGap: false,
+                data: x
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} '
+                }
+            }
+        ],
+        series: [
+            {
+                name: '成绩曲线',
+                type: 'line',
+                data: y,
+                markPoint: {
+                    data: [
+                        { type: 'max', name: '最大值' },
+                        { type: 'min', name: '最小值' }
+                    ]
+                },
+                markLine: {
+                    data: [
+                        { type: 'average', name: '平均值' }
+                    ]
+                }
+            }
+        ]
+    };
+
+    // 为echarts对象加载数据
+    myChart.setOption(option, true);
+    window.onresize = function () {
+        myChart.resize();
+    };
+    myChart.setOption(option);
+</script>

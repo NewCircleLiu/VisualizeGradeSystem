@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using NPOI.HSSF.UserModel;
 using NPOI.XSSF.UserModel;
-
 using NPOI.SS.UserModel;
 using VisualizeGradeSystem.Models.Score;
 using VisualizeGradeSystem.Models.Puzzle;
@@ -51,7 +50,8 @@ namespace VisualizeGradeSystem.Utils
                         k.knowledge_name = pList[j].puzzle_knowledge;
                         double s = Convert.ToDouble(GetCellValue(sheet.GetRow(i + 1).GetCell(3 + j)).ToString());
                         k.score = 100 * (s / pList[j].puzzle_fullscore);
-                        k.uploadtime = DateTime.Now.ToString("yyyy-MM-dd");
+                        k.updatetime = DateTime.Now.ToString("yyyy-MM-dd");
+                        k.uploadtime = pList[j].uploadtime;
                         k.subject = pList[j].subject;
                         list.Add(k);
                     }

@@ -1,0 +1,903 @@
+﻿@{
+    ViewBag.Title = "校级曲线";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Html.Partial("HomePartialView_2")
+@model  IEnumerable<string>
+@{
+    IEnumerable<string> uploadlogList = from items in Model select items;
+    string[] log = uploadlogList.ToArray();   
+}
+
+<!--<script src="~/Resources/js/common/jquery-1.9.1.js"></script>-->
+<style>
+    .btn-default, .widget-content input[type="button"] {
+        padding-bottom: 3px;
+        border-bottom: 2px solid #2185C5;
+        background: #2185C5;
+        color: #ffffff;
+        border-color: #2185C5;
+    }
+
+    h3 {
+        transition: color 0.5s;
+    }
+
+        h3:hover {
+            color: #ffe957;
+        }
+</style>
+<script src="~/Resources/js/utility/countUp.js"></script>
+<script type="text/javascript" src="~/Resources/js/utility/jquery.funnyText.min.js"></script>
+<link rel="stylesheet" type="text/css" href="~/Resources/css/jquery.funnyText.css" />
+
+<div class="container" style="margin-top: 100px; margin-bottom: 100px; text-align: left">
+    <div class="row clearfix">
+        <div class="col-md-4 column" style="width: 100%;">
+            <form action="#" method="post" enctype="multipart/form-data" name="choose">
+                <p id="error" style="color: red; text-align: center">&nbsp;</p>
+                <div class="form-group" style="text-align: center">
+                    <label for="exampleInputEmail1">选择考试科目</label>
+                    <select id="subject" name="subject">
+                        <option value="Access">Access</option>
+                        <option value="C">C语言</option>
+                        <option value="所有">所有</option>
+                    </select>
+                    <label for="exampleInputEmail1">选择院系</label>
+                    <select id="depart" name="depart" onchange="select_change(this.selectedIndex)">
+                    </select>
+                    <label for="exampleInputEmail1">选择班级</label>
+                    <select id="class" name="class">
+                    </select>
+                    <label for="exampleInputEmail1">选择学年</label>
+                    <select id="year" name="year">
+                        <option value="20">所有</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-8 column" id="chart" style="width: 100%; height: 400px">
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-6 column" style="text-align: center; margin-bottom: 10px">
+            <input class="btn btn-default btn-login" type="button" value="查看此班级(院系)成绩分段" id="showGradePart" onclick="showGradePart();">
+        </div>
+        <div class="col-md-6 column" style="text-align: center; margin-bottom: 10px">
+            <label for="exampleInputEmail1">选择第几次考试</label>
+            <select id="time" name="time">
+                @for (int i = 0; i < log.Length; i++)
+                {
+                     <option value="@log[i]">@log[i]</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row clearfix" id="grade_part1" style="display: none; margin-top: 50px">
+        <div class="col-md-3 column" style="text-align: center">
+            <h3 data-toggle="modal" data-target="#show_90">90分以上</h3>
+            <h1 id="grade90" style="color: #f17c67"></h1>
+            <h3>位</h3>
+            <!--start model dialog-->
+            <div class="modal fade" id="show_90" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">90分以上的同学
+                            </h4>
+                        </div>
+                        <div class="modal-body" id="ids_90">
+                            aaaaa
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal -->
+            </div>
+            <!--END Model Dialog-->
+        </div>
+        <div class="col-md-3 column" style="text-align: center">
+            <h3 data-toggle="modal" data-target="#show_80">80~90</h3>
+            <h1 id="grade80" style="color: #f17c67"></h1>
+            <h3>位</h3>
+            <!--start model dialog-->
+            <div class="modal fade" id="show_80" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">80~90分的同学
+                            </h4>
+                        </div>
+                        <div class="modal-body" id="ids_80">
+                            aaaaa
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal -->
+            </div>
+            <!--END Model Dialog-->
+        </div>
+        <div class="col-md-3 column" style="text-align: center">
+            <h3 data-toggle="modal" data-target="#show_70">70~80</h3>
+            <h1 id="grade70" style="color: #f17c67"></h1>
+            <h3>位</h3>
+            <!--start model dialog-->
+            <div class="modal fade" id="show_70" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" >70~80分的同学
+                            </h4>
+                        </div>
+                        <div class="modal-body" id="ids_70">
+                            aaaaa
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal -->
+            </div>
+            <!--END Model Dialog-->
+        </div>
+        <div class="col-md-3 column" style="text-align: center">
+            <h3 data-toggle="modal" data-target="#show_60">60~70</h3>
+            <h1 id="grade60" style="color: #f17c67"></h1>
+            <h3>位</h3>
+            <!--start model dialog-->
+            <div class="modal fade" id="show_60" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" >60~70分的同学
+                            </h4>
+                        </div>
+                        <div class="modal-body" id="ids_60">
+                            aaaaa
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal -->
+            </div>
+            <!--END Model Dialog-->
+        </div>
+    </div>
+    <div class="row clearfix" id="grade_part2" style="display: none; margin-top: 50px">
+        <div class="col-md-3 column" style="text-align: center">
+            <h3 data-toggle="modal" data-target="#show_50">50~60</h3>
+            <h1 id="grade50" style="color: #f17c67"></h1>
+            <h3>位</h3>
+            <!--start model dialog-->
+            <div class="modal fade" id="show_50" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" >50~60分的同学
+                            </h4>
+                        </div>
+                        <div class="modal-body" id="ids_50">
+                            aaaaa
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal -->
+            </div>
+            <!--END Model Dialog-->
+        </div>
+        <div class="col-md-3 column" style="text-align: center">
+            <h3 data-toggle="modal" data-target="#show_40">40~50</h3>
+            <h1 id="grade40" style="color: #f17c67"></h1>
+            <h3>位</h3>
+            <!--start model dialog-->
+            <div class="modal fade" id="show_40" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" >40~50分的同学
+                            </h4>
+                        </div>
+                        <div class="modal-body" id="ids_40">
+                            aaaaa
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal -->
+            </div>
+            <!--END Model Dialog-->
+        </div>
+        <div class="col-md-3 column" style="text-align: center">
+            <h3 data-toggle="modal" data-target="#show_30">30~40</h3>
+            <h1 id="grade30" style="color: #f17c67"></h1>
+            <h3>位</h3>
+            <!--start model dialog-->
+            <div class="modal fade" id="show_30" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" >30~40分以上的同学
+                            </h4>
+                        </div>
+                        <div class="modal-body" id="ids_30">
+                            aaaaa
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal -->
+            </div>
+            <!--END Model Dialog-->
+        </div>
+        <div class="col-md-3 column" style="text-align: center">
+            <h3 data-toggle="modal" data-target="#show_20">20~30</h3>
+            <h1 id="grade20" style="color: #f17c67"></h1>
+            <h3>位</h3>
+            <!--start model dialog-->
+            <div class="modal fade" id="show_20" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" >20~30分的同学
+                            </h4>
+                        </div>
+                        <div class="modal-body" id="ids_20">
+                            aaaaa
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal -->
+            </div>
+            <!--END Model Dialog-->
+        </div>
+    </div>
+    <div class="row clearfix" id="grade_part3" style="display: none; margin-top: 50px">
+        <div class="col-md-4 column" style="text-align: center">
+            <h3 data-toggle="modal" data-target="#show_10">10~20</h3>
+            <h1 id="grade10" style="color: #f17c67"></h1>
+            <h3>位</h3>
+            <!--start model dialog-->
+            <div class="modal fade" id="show_10" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" >10~20分的同学
+                            </h4>
+                        </div>
+                        <div class="modal-body" id="ids_10">
+                            aaaaa
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal -->
+            </div>
+            <!--END Model Dialog-->
+        </div>
+        <div class="col-md-4 column" style="text-align: center">
+        </div>
+        <div class="col-md-4 column" style="text-align: center">
+            <h3 data-toggle="modal" data-target="#show_0">10分以下</h3>
+            <h1 id="grade0" style="color: #f17c67"></h1>
+            <h3>位</h3>
+            <!--start model dialog-->
+            <div class="modal fade" id="show_0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" >0~10分的同学
+                            </h4>
+                        </div>
+                        <div class="modal-body" id="ids_0">
+                            aaaaa
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal -->
+            </div>
+            <!--END Model Dialog-->
+        </div>
+    </div>
+</div>
+
+
+
+<!--<script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>-->
+<script src="~/Resources/js/utility/echarts.common.min.js"></script>
+<script>
+    var grade90;
+    var grade80;
+    var grade70;
+    var grade60;
+    var grade50;
+    var grade40;
+    var grade30;
+    var grade20;
+    var grade10;
+    var grade0;
+    var ids_0 = document.getElementById("ids_0");
+    var ids_10 = document.getElementById("ids_10");
+    var ids_20 = document.getElementById("ids_20");
+    var ids_30 = document.getElementById("ids_30");
+    var ids_40 = document.getElementById("ids_40");
+    var ids_50 = document.getElementById("ids_50");
+    var ids_60 = document.getElementById("ids_60");
+    var ids_70 = document.getElementById("ids_70");
+    var ids_80 = document.getElementById("ids_80");
+    var ids_90 = document.getElementById("ids_90");
+    var arr_depart = ["所有", "生态学院", "农牧学院草科系", "农牧学院农林系", "农牧学院动医系", "农牧学院动科系", "财经学院会财系", "财经学院工管系", "财经学院旅管系", "财经学院管科系", "财经学院财金系"];
+/*    var arr_class = [
+            ["所有"],
+            ["所有", "生技20151", "生技20152", "生技20153", "生物工程15", "环境生态15", "环科2015"],
+            ["所有", "草科2015"],
+            ["所有", "林学2015", "农学2015", "园艺2015"],
+            ["所有", "动医20151", "动医20152"],
+            ["所有", "动科2015"],
+            ["所有", "财务20151", "财务20152", "会计20151", "会计20152"],
+            ["所有", "工商20151", "工商20152"],
+            ["所有", "旅管2015", "行政2015"],
+            ["所有", "信管2015"],
+            ["所有", "金融20151", "金融20152"]
+    ];
+*/
+    var arr_class = [];
+    var arr_subject = ["Access", "C"];
+    function init() {
+        for (var i = 0; i < arr_depart.length; i++)//依次获取当前院系下的班级
+        {
+            var temp = []
+            temp.push("所有");
+            $.ajax({
+                type: "post",
+                async: false,
+                url: "@Url.Content("~/ShowTable/GetClassInDepart/")",
+                data: { "depart": arr_depart[i] },
+                dataType: "json",
+                success: function (result) {
+                    if (result) {
+                        for (var j = 0; j < result.length; j++) {
+                            temp.push(result[j]);
+                        }
+                        arr_class.push(temp);
+                    }
+                }
+            });
+        }
+        var depart = document.choose.depart;
+        depart.style.width = 150 + "px";
+        var Class = document.choose.class;
+        Class.style.width = 150 + "px";
+        //给下拉框赋值高度，才能在其里面写入内容
+        depart.length = arr_depart.length;
+        for (var i = 0; i < arr_depart.length; i++) {
+            depart.options[i].text = arr_depart[i];
+            depart.options[i].value = arr_depart[i];
+        }
+        //设置默认被选中的选项
+        var index = 1;
+        depart.selectedIndex = index;
+        //给city赋值高度，才能在其里面写入内容
+        Class.length = arr_class[index].length;
+        for (var j = 0; j < arr_class[index].length; j++) {
+            Class.options[j].text = arr_class[index][j];
+            Class.options[j].value = arr_class[index][j];
+        }
+
+    }
+    function select_change(num) {
+        var Class = document.choose.class;
+        Class.length = 0;
+        Class.length = arr_class[num].length;
+        for (var i = 0; i < arr_class[num].length; i++) {
+            Class.options[i].text = arr_class[num][i];
+            Class.options[i].value = arr_class[num][i];
+        }
+    }
+    // 基于准备好的dom，初始化echarts图表
+    var subject = "Access";
+    var depart = "生态学院";
+    var Class = "环境生态15";
+    var year = "20";
+
+    var myChart = echarts.init(document.getElementById("chart"));
+    var y = [];
+    var x = [];
+    var i = 0;
+    var j = 0;
+    var k = 0;
+    var size = 0;
+    var grade_part1 = document.getElementById("grade_part1");
+    var grade_part2 = document.getElementById("grade_part2");
+    var grade_part3 = document.getElementById("grade_part3");
+    var time = "1";
+    function showGradePart() {
+        stu_ids = [];
+        num = [];
+        stu_name = [];
+        grade_part1.style.display = "block";
+        grade_part2.style.display = "block";
+        grade_part3.style.display = "block";
+        $.ajax({
+            type: "post",
+            async: false,
+            url: "@Url.Content("~/ShowTable/GetSomeData/")",
+            data: { "subject": subject, "depart": depart, "class": Class, "year": year,"time":time },
+            dataType: "json",
+            success: function (result) {
+                if (result) {
+                    for (j = 0; j < result.length; j++) {
+                        num.push(result[j].stu_num);
+                        stu_ids.push(result[j].stu_id); //[[90以上的学号]]
+                        stu_name.push(result[j].stu_name);
+                    }
+                }
+            }
+        });
+        grade90 = new CountUp("grade90", 0, num[0], 0, 1.5);
+        grade80 = new CountUp("grade80", 0, num[1], 0, 1.5);
+        grade70 = new CountUp("grade70", 0, num[2], 0, 1.5);
+        grade60 = new CountUp("grade60", 0, num[3], 0, 1.5);
+        grade50 = new CountUp("grade50", 0, num[4], 0, 1.5);
+        grade40 = new CountUp("grade40", 0, num[5], 0, 1.5);
+        grade30 = new CountUp("grade30", 0, num[6], 0, 1.5);
+        grade20 = new CountUp("grade20", 0, num[7], 0, 1.5);
+        grade10 = new CountUp("grade10", 0, num[8], 0, 1.5);
+        grade0 = new CountUp("grade0", 0, num[9], 0, 1.5);
+        grade90.start(); grade80.start(); grade70.start(); grade60.start();
+        grade50.start(); grade40.start(); grade30.start(); grade20.start();
+        grade10.start(); grade0.start();
+        alert("aa");
+        for (i = 0; i < stu_ids.length; i++)
+        {
+            var html = "<table class='table'><thead><tr><th>学号</th><th>姓名</th><th>查看成绩曲线</th><th>查看知识点</th></tr></thead><tbody>";
+            for (j = 0; j < stu_ids[i].length; j++)
+            {
+                html = html + "<tr><th>" + stu_ids[i][j] + "</th><th>" + stu_name[i][j] + "</th><th>" + "<a href='/Teacher/GetStuGradePage?stu_id=" + stu_ids[i][j] + "&subject=" + subject + "'>查看</a></th><th><a href='/Teacher/GetStuKnowledgePage?stu_id=" + stu_ids[i][j] + "&subject=" + subject + "'>查看</a></th></tr>"
+            }
+            html=html+"</tabel>";
+            switch (i)
+            {
+                case 0:
+                    
+                    ids_90.innerHTML = html;
+                    break;
+                case 1:
+                    ids_80.innerHTML = html;
+                    break;
+                case 2:
+                    ids_70.innerHTML = html;
+                    break;
+                case 3:
+                    ids_60.innerHTML = html;
+                    break;
+                case 4:
+                    ids_50.innerHTML = html;
+                    break;
+                case 5:
+                    ids_40.innerHTML = html;
+                    break;
+                case 6:
+                    ids_30.innerHTML = html;
+                    break;
+                case 7:
+                    ids_20.innerHTML = html;
+                    break;
+                case 8:
+                    ids_10.innerHTML = html;
+                    break;
+                case 9:
+                    ids_0.innerHTML = html;
+                    break;
+            }
+        }
+    }
+    $(document).ready(function () {
+        init();
+        $("#subject").change(function () {
+            subject = $("#subject").find("option:selected").text();
+            clean();
+            myChart = echarts.init(document.getElementById("chart"));
+            update();
+            myChart.setOption(option, true);
+            showGradePart();
+            grade_part1.style.display = "none";
+            grade_part2.style.display = "none";
+            grade_part3.style.display = "none";
+        });
+        $("#depart").change(function () {
+            depart = $("#depart").find("option:selected").text();
+            Class = "所有";
+            clean();
+            myChart = echarts.init(document.getElementById("chart"));
+            update();
+            myChart.setOption(option, true);
+            showGradePart();
+            grade_part1.style.display = "none";
+            grade_part2.style.display = "none";
+            grade_part3.style.display = "none";
+        });
+        $("#class").change(function () {
+            Class = $("#class").find("option:selected").text();
+            clean();
+            myChart = echarts.init(document.getElementById("chart"));
+            update();
+            myChart.setOption(option, true);
+            showGradePart();
+            grade_part1.style.display = "none";
+            grade_part2.style.display = "none";
+            grade_part3.style.display = "none";
+        });
+        $("#year").change(function () {
+            year = $("#year").find("option:selected").text();
+            if (year == "所有") {
+                year = "20";
+            }
+            clean();
+            myChart = echarts.init(document.getElementById("chart"));
+            update();
+            myChart.setOption(option, true);
+            showGradePart();
+            grade_part1.style.display = "none";
+            grade_part2.style.display = "none";
+            grade_part3.style.display = "none";
+        });
+        $("#time").change(function () {
+            time = $("#time").find("option:selected").text();
+            showGradePart();
+        });
+    });
+    function clean() {
+        this.option.series = [];
+        this.option.legend.data = [];
+        this.option.xAxis[0].data = [];
+        size = 0;
+    }
+    function update() {
+        x = [];
+        y = [];
+        if (subject == "所有" && depart != "所有" && Class != "所有") {
+            for (i = 0; i < arr_subject.length; i++) {
+                y = GetY(arr_subject[i], depart, Class, year);
+                x = GetX(arr_subject[i], depart, Class, year);
+                if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                {
+                    x = ['无考试成绩'];
+                    y = [0];
+                }
+                this.option.series.push(
+                    {
+                        name: arr_subject[i] + "-" + depart + "-" + Class,
+                        type: 'line',
+                        data: y
+                    }
+                );
+                this.option.legend.data.push(arr_subject[i] + "-" + Class);
+                if (this.option.xAxis[0].data.length < x.length) {
+                    this.option.xAxis[0].data = x;
+                }
+            }
+        }
+        else if (subject !== "所有" && depart != "所有" && Class != "所有") {
+
+            y = GetY(subject, depart, Class, year);
+            x = GetX(subject, depart, Class, year);
+            if (typeof (y[0]) == "undefined")//证明没有找到成绩
+            {
+                x = ['无考试成绩'];
+                y = [0];
+            }
+            this.option.series[0] =
+                {
+                    name: subject + "-" + depart + "-" + Class,
+                    type: 'line',
+                    data: y
+                };
+            if (this.option.xAxis[0].data.length < x.length) {
+                this.option.xAxis[0].data = x;
+            }
+            this.option.legend.data.push(subject + "-" + depart + "-" + Class);
+        }
+        else if (subject != "所有" && depart == "所有" && Class != "所有") {
+            for (i = 1; i < arr_depart.length; i++) {
+                y = GetY(subject, arr_depart[i], Class, year);
+                x = GetX(subject, arr_depart[i], Class, year);
+                if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                {
+                    x = ['无考试成绩'];
+                    y = [0];
+                }
+                this.option.series.push(
+                    {
+                        name: subject + "-" + arr_depart[i] + "-" + Class,
+                        type: 'line',
+                        data: y
+                    });
+                this.option.legend.data.push(subject + "-" + Class);
+                if (this.option.xAxis[0].data.length < x.length) {
+                    this.option.xAxis[0].data = x;
+                }
+            }
+        }
+        else if (subject != "所有" && depart != "所有" && Class == "所有") {
+            for (i = 1; i < arr_class[arr_depart.indexOf(depart)].length; i++) {
+                y = GetY(subject, depart, arr_class[arr_depart.indexOf(depart)][i], year);
+                x = GetX(subject, depart, arr_class[arr_depart.indexOf(depart)][i], year);
+                if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                {
+                    x = ['无考试成绩'];
+                    y = [0];
+                }
+                this.option.series.push(
+                    {
+                        name: subject + "-" + depart + "-" + arr_class[arr_depart.indexOf(depart)][i],
+                        type: 'line',
+                        data: y
+                    });
+                this.option.legend.data.push(subject + "-" + arr_class[arr_depart.indexOf(depart)][i]);
+                if (this.option.xAxis[0].data.length < x.length) {
+                    this.option.xAxis[0].data = x;
+                }
+            }
+        }
+        else if (subject == "所有" && depart == "所有" && Class != "所有") {
+            for (i = 0; i < arr_subject.length; i++) {
+                for (j = 1; j < arr_depart.length; j++) {
+                    y = GetY(arr_subject[i], arr_depart[j], Class, year);
+                    x = GetX(arr_subject[i], arr_depart[i], Class, year);
+                    if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                    {
+                        x = ['无考试成绩'];
+                        y = [0];
+                    }
+                    this.option.series.push(
+                        {
+                            name: arr_subject[i] + "-" + arr_depart[j] + "-" + Class,
+                            type: 'line',
+                            data: y
+                        });
+                    this.option.legend.data.push(arr_subject[i] + "-" + Class);
+                    if (this.option.xAxis[0].data.length < x.length) {
+                        this.option.xAxis[0].data = x;
+                    }
+                }
+            }
+        }
+        else if (subject == "所有" && depart != "所有" && Class == "所有") {
+            size = 0;
+            for (i = 0; i < arr_subject.length; i++) {
+                for (j = 1; j < arr_class[arr_depart.indexOf(depart)].length; j++) {
+                    y = GetY(arr_subject[i], depart, arr_class[arr_depart.indexOf(depart)][j], year);
+                    x = GetX(arr_subject[i], depart, arr_class[arr_depart.indexOf(depart)][j], year);
+                    if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                    {
+                        x = ['无考试成绩'];
+                        y = [0];
+                    }
+                    this.option.series.push(
+                        {
+                            name: arr_subject[i] + "-" + depart + "-" + arr_class[arr_depart.indexOf(depart)][j],
+                            type: 'line',
+                            data: y
+                        });
+                    this.option.legend.data.push(arr_subject[i] + "-" + arr_class[arr_depart.indexOf(depart)][j]);
+                    if (this.option.xAxis[0].data.length < x.length) {
+                        this.option.xAxis[0].data = x;
+                    }
+                }
+            }
+        }
+        else if (subject != "所有" && depart == "所有" && Class == "所有") {
+            size = 0;
+            for (i = 1; i < arr_depart.length; i++) {
+                for (j = 1; j < arr_class[i].length; j++) {
+                    y = GetY(subject, arr_depart[i], arr_class[i][j], year);
+                    x = GetX(subject, arr_depart[i], arr_class[i][j], year);
+                    if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                    {
+                        x = ['无考试成绩'];
+                        y = [0];
+                    }
+                    this.option.series.push(
+                        {
+                            name: subject + "-" + arr_depart[i] + "-" + arr_class[i][j],
+                            type: 'line',
+                            data: y
+                        });
+                    this.option.legend.data.push(subject + "-" + arr_class[i][j]);
+                    if (this.option.xAxis[0].data.length < x.length) {
+                        this.option.xAxis[0].data = x;
+                    }
+                }
+            }
+        }
+        else {
+            size = 0;
+            for (i = 0; i < arr_subject.length; i++) {
+                for (j = 1; j < arr_depart.length; j++) {
+                    for (k = 1; k < arr_class[j].length; k++) {
+                        y = GetY(arr_subject[i], arr_depart[j], arr_class[j][k], year);
+                        x = GetX(arr_subject[i], arr_depart[j], arr_class[j][k], year);
+                        if (typeof (y[0]) == "undefined")//证明没有找到成绩
+                        {
+                            x = ['无考试成绩'];
+                            y = [0];
+                        }
+                        this.option.series.push(
+                            {
+                                name: arr_subject[i] + "-" + arr_depart[j] + "-" + arr_class[j][k],
+                                type: 'line',
+                                data: y
+                            });
+                        if (this.option.xAxis[0].data.length < x.length) {
+                            this.option.xAxis[0].data = x;
+                        }
+                        this.option.legend.data.push(arr_subject[i] + "-" + arr_class[j][k]);
+                    }
+                }
+            }
+        }
+    }
+    function GetY(s, d, c, y) {
+        $.ajax({
+            type: "post",
+            async: false,
+            url: "@Url.Content("~/ShowTable/GradeSchollChartPage/")",
+            data: { "subject": s, "depart": d, "class": c, "year": y },
+            dataType: "json",
+            success: function (result) {
+                y = [];
+                if (result) {
+                    for (var i = 0; i < result.length; i++) {
+                        y.push(result[i]);
+                    }
+                }
+            }
+        })
+
+        return y;
+    }
+    function GetX(s, d, c, y) {
+        $.ajax({
+            type: "post",
+            async: false,
+            url: "@Url.Content("~/ShowTable/GradeSchollChartPaget_X/")",
+            data: { "subject": s, "depart": d, "class": c, "year": y },
+            dataType: "json",
+            success: function (result) {
+                x = [];
+                if (result) {
+                    for (var i = 0; i < result.length; i++) {
+                        x.push(result[i]);
+                    }
+                }
+            }
+        })
+
+        return x;
+    }
+
+    x = GetX("Access", "生态学院", "环境生态15", "20");
+    y = GetY("Access", "生态学院", "环境生态15", "20");
+
+    var option = {
+        title: {
+            text: '成绩曲线',
+            subtext: '仅限教师端查看'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+
+        },
+        //右上角工具条
+        toolbox: {
+            show: true,
+            feature: {
+                mark: { show: true },
+                dataView: { show: true, readOnly: false },
+                magicType: { show: true, type: ['line', 'bar'] },
+                restore: { show: true },
+                saveAsImage: { show: true }
+            }
+        },
+        calculable: true,
+        xAxis: [
+            {
+                type: 'category',
+                boundaryGap: false,
+                data: ["无考试"]
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} '
+                }
+            }
+        ],
+        series: [
+            {
+                name: '成绩曲线',
+                type: 'line',
+                data: [0],
+                markPoint: {
+                    data: [
+                        { type: 'max', name: '最大值' },
+                        { type: 'min', name: '最小值' }
+                    ]
+                },
+                markLine: {
+                    data: [
+                        { type: 'average', name: '平均值' }
+                    ]
+                }
+            }
+        ]
+    };
+
+    // 为echarts对象加载数据
+    myChart.setOption(option);
+    myChart.setOption(option, true);
+    window.onresize = function () {
+        myChart.resize();
+    };
+    myChart.setOption(option);
+</script>

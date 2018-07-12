@@ -1,0 +1,116 @@
+﻿<link href="~/Resources/css/login-register.css" rel="stylesheet" />
+<link href="~/Resources/css/HomePartialView.css" rel="stylesheet" />
+<script src="~/Resources/js/common/JQuery.md5.js"></script>
+<script src="~/Resources/js/custom/userLogin.js"></script>
+<!--body-->
+@using VisualizeGradeSystem.Models.User
+@{
+    User u = (User)Session["User"]; 
+}
+<nav class="navbar navbar-default" role="navigation" id="top_bar" style="background-color: #0066FF">
+    <div class="container">
+        <div class="navbar-header" style="float: left;">
+            <button type="button" onclick="OnClick();" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="@Url.Content("~/Head/Index/")">
+                <img src="~/Resources/img/logo.png" id="top_img">
+            </a>
+        </div>
+        <!--/.navbar-header-->
+        <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-2" style="height: 1px; padding-bottom: 10px">
+            <ul class="nav navbar-nav">
+                @if (u != null)
+                {
+
+                    <li class="dropdown">
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">欢迎，@u.user_name<strong class="caret"></strong></a>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="@Url.Content("~/Head/ModifyPassword/")" style="color: black">修改密码</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Content("~/Head/ManageClassPage/")" style="color: black">管理本学期班级</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="@Url.Content("~/Head/Logout/")">退出</a>
+                            </li>
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a class="btn big-login" style="background-color: #447BD4; padding-top: 5px; padding-bottom: 5px"  data-toggle="modal" href="javascript:void(0)" onclick="openLoginModal();">登录</a>
+                    </li>
+                }
+            </ul>
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="@Url.Content("~/Head/Index/")">首页</a>
+                </li>
+                <li>
+                    <a href="@Url.Content("~/Head/SchoolGradePage/")">本课题组内成绩曲线</a>
+                </li>
+                <li>
+                    <a href="@Url.Content("~/Head/ChooseWhichTimePage/")">上传成绩</a>
+                </li>
+                <li>
+                    <a href="@Url.Content("~/Head/SchoolKnowledgePage/")">知识点</a>
+                </li>
+                <li>
+                    <a href="@Url.Content("~/Head/ManageTeacherPage/")">教师管理</a>
+                </li>
+            </ul>
+
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</nav>
+<div class="modal fade login" id="loginModal">
+    <div class="modal-dialog login animated">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">登录</h4>
+            </div>
+            <div class="modal-body">
+                <div class="box">
+                    <div class="content">
+
+                        <div class="form loginBox">
+                            <p id="error_info" style="color: red; text-align: center">&nbsp;</p>
+                            <form method="post" action="~/Login/CheckUser/" accept-charset="UTF-8">
+                                <input id="user_id" class="form-control" type="text" placeholder="账号" name="user_id">
+                                <input id="user_pass" class="form-control" type="password" placeholder="密码" name="user_pass">
+                                <div class="form-group">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <input class="form-control" placeholder="验证码" name="ValidateCode" id="ValidateCode" type="text" style="width: 200px;">
+                                            </td>
+                                            <td>
+                                                <a onclick="refreshCode()">
+                                                    <img id="codeImg" src="@Url.Content("~/VerifyCode")" style="border:solid 1px;width:110px;height:33px;margin-left:10px;"/>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <input class="btn btn-default btn-login" type="button" value="登录" onclick="login()">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

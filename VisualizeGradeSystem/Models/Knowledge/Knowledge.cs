@@ -14,6 +14,7 @@ namespace VisualizeGradeSystem.Models.Knowledge
         public string puzzle_name {get;set;} //这个题目的名字
         public string knowledge_name {get;set;}  //知识点的名字
         public string uploadtime { get; set; } //上传时间——作为一次考试
+        public string updatetime { get; set; }
         public string uploader { get; set; }  //上传者
         public string score_gradeid { get; set; } //学生的考号
         public string stu_name { get; set; } //学生的名字

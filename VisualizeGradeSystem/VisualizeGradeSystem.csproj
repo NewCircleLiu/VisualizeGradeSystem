@@ -130,11 +130,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="App_Start\BundleConfig.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="App_Start\FilterConfig.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="App_Start\RouteConfig.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="App_Start\WebApiConfig.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\HeadController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\ShowTableController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\TeacherController.cs" />
     <Compile Include="Controllers\VerifyCodeController.cs" />
@@ -142,6 +153,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Class\Class.cs" />
+    <Compile Include="Models\Class\ClassContext.cs" />
     <Compile Include="Models\Knowledge\Knowledge.cs" />
     <Compile Include="Models\Knowledge\KnowledgeContext.cs" />
     <Compile Include="Models\Puzzle\Puzzle.cs" />
@@ -152,11 +165,18 @@
     <Compile Include="Models\User\UserContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\filters\UserAuthorizeAttribute.cs" />
+    <Compile Include="Utils\md5_pass.cs" />
+    <Compile Include="Utils\Paging.cs" />
+    <Compile Include="Utils\PartClass.cs" />
     <Compile Include="Utils\ReadExcel.cs" />
     <Compile Include="Utils\Uploader.cs" />
     <Compile Include="Utils\ValidateCode.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Class.mdf" />
+    <Content Include="App_Data\Class_log.ldf">
+      <DependentUpon>Class.mdf</DependentUpon>
+    </Content>
     <Content Include="App_Data\Knowledge.mdf" />
     <Content Include="App_Data\Knowledge_log.ldf">
       <DependentUpon>Knowledge.mdf</DependentUpon>
@@ -266,7 +286,9 @@
     <Content Include="Resources\Uploader\js\jquery.filer.min.js" />
     <Content Include="Resources\Uploader\js\prettify.js" />
     <Content Include="Resources\Uploader\js\scripts.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -282,11 +304,8 @@
     <Content Include="Views\Teacher\Index.cshtml" />
     <Content Include="Views\Shared\HomePartialView_2.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
-    <Content Include="Views\Teacher\UploadFilesPage.cshtml" />
-    <Content Include="Views\Teacher\ChooseSubjectPage.cshtml" />
     <Content Include="Views\Student\PersonalLinePage.cshtml" />
     <Content Include="Views\Student\GradeClassChartPage.cshtml" />
-    <Content Include="Views\Teacher\GradeSchollChartPage.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -296,12 +315,6 @@
     <Content Include="Resources\Uploader\assets\fonts\jquery.filer-icons\jquery-filer.eot" />
     <Content Include="Resources\Uploader\assets\fonts\jquery.filer-icons\jquery-filer.ttf" />
     <Content Include="Resources\Uploader\assets\fonts\jquery.filer-icons\jquery-filer.woff" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Teacher\ChooseKnowledgePage.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Teacher\KnowledgePage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Student\KnowledgePage.cshtml" />
@@ -329,6 +342,31 @@
   <ItemGroup>
     <None Include="Properties\PublishProfiles\Default Settings %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
+    <Content Include="Views\Shared\HomePartialView_3.cshtml" />
+    <Content Include="Views\Shared\HomePartialView_4.cshtml" />
+    <Content Include="Views\Head\Index.cshtml" />
+    <Content Include="Views\Head\ChooseWhichTimePage.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Head\UploadFilesPage.cshtml" />
+    <Content Include="Views\Head\ChooseKnowledgePage.cshtml" />
+    <Content Include="Views\Head\ChooseSubjectPage.cshtml" />
+    <Content Include="Views\Admin\AddUserPage.cshtml" />
+    <Content Include="Views\Admin\ManageUserPage.cshtml" />
+    <Content Include="Views\Head\ManageTeacherPage.cshtml" />
+    <Content Include="Views\Admin\SchoolGradePage.cshtml" />
+    <Content Include="Views\Admin\SchoolKnowledgePage.cshtml" />
+    <Content Include="Views\Head\SchoolKnowledgePage.cshtml" />
+    <Content Include="Views\Head\SchoolGradePage.cshtml" />
+    <Content Include="Views\Teacher\SchoolKnowledgePage.cshtml" />
+    <Content Include="Views\Teacher\SchoolGradePage.cshtml" />
+    <Content Include="Views\Head\ChooseKnowledgePage_C.cshtml" />
+    <Content Include="Views\Admin\GetStuGradePage.cshtml" />
+    <Content Include="Views\Admin\GetStuKnowledgePage.cshtml" />
+    <Content Include="Views\Head\ManageClassPage.cshtml" />
+    <Content Include="Views\Head\GetStuGradePage.cshtml" />
+    <Content Include="Views\Head\GetStuKnowledgePage.cshtml" />
+    <Content Include="Views\Teacher\GetStuGradePage.cshtml" />
+    <Content Include="Views\Teacher\GetStuKnowledgePage.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -2,7 +2,7 @@
     ViewBag.Title = "知识点选择";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@Html.Partial("HomePartialView_2")
+@Html.Partial("HomePartialView_3")
 @using VisualizeGradeSystem.Models.Knowledge
 @using VisualizeGradeSystem.Models.Puzzle
 @model  IEnumerable<Puzzle>
@@ -21,7 +21,7 @@
         <div class="col-md-8 column">
             <h3>选择每个题目的知识点
             </h3>
-            <form action="@Url.Content("~/Teacher/ChooseKnowledge_Access/")" method="post" name="ChooseKnowledge">
+            <form action="@Url.Content("~/Head/ChooseKnowledge/")" method="post" name="ChooseKnowledge">
                 @for (int i = 0; i < puzzleArray.Length; i++)
                 {
                     <div class="form-group">

@@ -4,10 +4,6 @@ C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\Visuali
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\EntityFramework.dll
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\Microsoft.Web.Infrastructure.dll
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\Newtonsoft.Json.dll
-C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\NPOI.dll
-C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\NPOI.OOXML.dll
-C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\NPOI.OpenXml4Net.dll
-C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\NPOI.OpenXmlFormats.dll
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\System.Web.Mvc.dll
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\System.Web.Optimization.dll
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\System.Web.Providers.dll
@@ -16,7 +12,6 @@ C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\Visuali
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\System.Web.WebPages.dll
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\System.Web.WebPages.Razor.dll
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\WebGrease.dll
-C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\ICSharpCode.SharpZipLib.dll
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\EntityFramework.xml
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\Newtonsoft.Json.xml
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\System.Web.Mvc.xml
@@ -32,6 +27,6 @@ C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\Visuali
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\zh-Hans\System.Web.WebPages.resources.dll
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\zh-Hans\System.Web.WebPages.Deployment.resources.dll
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\bin\zh-Hans\System.Web.WebPages.Razor.resources.dll
+C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\obj\Release\VisualizeGradeSystem.csprojResolveAssemblyReference.cache
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\obj\Release\VisualizeGradeSystem.dll
 C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\obj\Release\VisualizeGradeSystem.pdb
-C:\Users\IMAC\documents\visual studio 2012\Projects\VisualizeGradeSystem\VisualizeGradeSystem\obj\Release\VisualizeGradeSystem.csprojResolveAssemblyReference.cache

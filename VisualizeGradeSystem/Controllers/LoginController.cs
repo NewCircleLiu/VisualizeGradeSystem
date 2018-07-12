@@ -37,6 +37,7 @@ namespace VisualizeGradeSystem.Controllers
                     {
                         currentUser = exsit[0];
                         Session["User"] = currentUser;
+                        ViewBag.user = currentUser.user_account;
                         return Content(currentUser.user_kind);
                     }
                 }

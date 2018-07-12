@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@Html.Partial("HomePartialView_2")
+@Html.Partial("HomePartialView_3")
 
 
 <link href="~/resouces/css/main.css" rel="stylesheet" type="text/css">
@@ -15,16 +15,14 @@
         <div class="col-md-4 column">
         </div>
         <div class="col-md-4 column">
-            <h3>选择本次考试科目
+            <h3>请输入这是第几次考试
             </h3>
-            <form action="@Url.Content("~/Teacher/ChooseSubject/")" method="post" enctype="multipart/form-data">
-                <p id="error" style="color: red; text-align: center">&nbsp;</p>
+            <form action="@Url.Content("~/Head/ChooseWhichTime/")" method="post" >
+                <p id="error" style="color: red; text-align: center">@Request.Params["errorMsg"]</p>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">选择考试科目</label>
-                    <select id="subject" name="subject">
-                        <option value="C">C语言</option>
-                        <option value="Access">Access</option>
-                    </select>
+                    <label for="exampleInputEmail1">第</label>
+                    <input type="text" name="whichTime" id="whichTime"/>
+                    <label for="exampleInputEmail1">次</label>
                 </div>
                 <center><input class="btn btn-default btn-login" type="submit" value="ok"></center>
             </form>

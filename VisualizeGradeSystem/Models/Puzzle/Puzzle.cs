@@ -14,6 +14,7 @@ namespace VisualizeGradeSystem.Models.Puzzle
         public string puzzle_name { get; set; }
         public string puzzle_knowledge { get; set; }
         public string uploadtime { get; set; }
+        public string updatetime { get; set; }
         public string uploader { get; set; }
         public double puzzle_fullscore { get; set; }
     }

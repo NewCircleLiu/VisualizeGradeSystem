@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "管理员首页";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("HomePartialView_4")
+
+<link href="~/Resources/css/index.css" rel="stylesheet" />
+<link href="~/Resources/css/main.css" rel="stylesheet" type="text/css">
+<link href="~/Resources/css/themify-icons.css" rel="stylesheet" />
+
+<div class="container" style="margin: 100px">
+    <div class="row clearfix">
+        <div class="col-md-4 column">
+        </div>
+        <div class="col-md-4 column">
+            <h3>请输入账号信息
+            </h3>
+            <form action="@Url.Content("~/Admin/AddUser/")" method="post" enctype="multipart/form-data">
+                <p id="error" style="color: red; text-align: center">&nbsp;</p>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">账号类型</label>
+                    <select id="kind" name="kind">
+                        <option value="stu">学生</option>
+                        <option value="teacher">普通教师</option>
+                        <option value="head">课题组组长</option>
+                        <option value="admin">管理员</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">账号</label>
+                    <input type="text" name="account" id="account" />
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">姓名</label>
+                    <input type="text" name="name" id="name" />
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">所属院系</label>
+                    <input type="text" name="depart" id="depart" />
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">所属班级（所教授班级）</label>
+                    <input type="text" name="Class" id="Class" />
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">所属课题组（学生账号不用填写）</label>
+                    <input type="text" name="subject" id="subject" />
+                </div>
+                <center><input class="btn btn-default btn-login" type="submit" value="ok"></center>
+            </form>
+        </div>
+        <div class="col-md-4 column">
+        </div>
+    </div>
+</div>

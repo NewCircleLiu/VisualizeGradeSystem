@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "管理员首页";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("HomePartialView_4")
+
+<link href="~/Resources/css/index.css" rel="stylesheet" />
+<link href="~/Resources/css/main.css" rel="stylesheet" type="text/css">
+<link href="~/Resources/css/themify-icons.css" rel="stylesheet" />
+
+<div class="container">
+    <div class="fh5co-spacer fh5co-spacer-md"></div>
+    <div class="row" id="fh5co-features">
+
+        <!--成绩曲线-->
+        <div class="col-md-6 col-sm-4 text-center fh5co-feature feature-box">
+            <figure class="effect-sadie">
+                <div class="fh5co-feature-icon">
+                    <a href="@Url.Content("~/Admin/AddUserPage/")"><i class="ti-bar-chart-alt"></i></a>
+                </div>
+                <h3 class="heading tm-figure-title">添加账号</h3>
+                <p style="color: #8b969c; padding-top: 20px">点击这里可以添加教师或者学生账号</p>
+            </figure>
+        </div>
+        <!--上传成绩-->
+        <div class="col-md-6 col-sm-4 text-center fh5co-feature feature-box">
+            <figure class="effect-sadie">
+                <div class="fh5co-feature-icon">
+                    <a href="@Url.Content("~/Admin/ManageUserPage/")"><i class="ti-upload"></i></a>
+                </div>
+                <h3 class="heading">账号管理</h3>
+                <p style="color: #8b969c; padding-top: 20px">点击这里可以管理本系统账号</p>
+            </figure>
+        </div>
+        <!--知识点-->
+        <div class="col-md-6 col-sm-4 text-center fh5co-feature feature-box">
+            <figure class="effect-sadie">
+                <div class="fh5co-feature-icon">
+                    <a href="@Url.Content("~/Admin/SchoolGradePage/")"><i class="ti-book"></i></a>
+                </div>
+                <h3 class="heading">校成绩曲线</h3>
+                <p style="color: #8b969c; padding-top: 20px">点击这里可以查看全校各院系的成绩曲线</p>
+            </figure>
+        </div>
+        <!--使用指南-->
+        <div class="col-md-6 col-sm-4 text-center fh5co-feature feature-box">
+            <figure class="effect-sadie">
+                <div class="fh5co-feature-icon">
+                    <a href="@Url.Content("~/Admin/SchoolKnowledgePage/")"><i class="ti-help"></i></a>
+                </div>
+                <h3 class="heading">知识点</h3>
+                <p style="color: #8b969c; padding-top: 20px">点击这里可以查看全校各院系对知识点的掌握情况</p>
+            </figure>
+        </div>
+    </div>
+    <div class="fh5co-spacer fh5co-spacer-md"></div>
+</div>

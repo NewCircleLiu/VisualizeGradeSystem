@@ -198,7 +198,7 @@ namespace VisualizeGradeSystem.Controllers
             int j=1;
             foreach(string t in time)
             {
-                x.Add("第" + j + "次考试");
+                x.Add("第" + t + "次考试");
                 j++;
             }
             return Json(x);
@@ -305,7 +305,7 @@ namespace VisualizeGradeSystem.Controllers
             List<string> x = new List<string>();
             for (int i = 1; i <= list.Length; i++)
             {
-                x.Add("第" + i + "次考试");
+                x.Add("第" + list[i] + "次考试");
             }
             return Json(x);
         }
@@ -333,7 +333,7 @@ namespace VisualizeGradeSystem.Controllers
             int j = 1;
             foreach (string t in time)
             {
-                x.Add("第" + j + "次考试");
+                x.Add("第" + t + "次考试");
                 j++;
             }
             return Json(x);
